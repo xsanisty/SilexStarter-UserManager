@@ -74,7 +74,7 @@ class UserManagerModule implements ModuleProviderInterface
             ]
         );
 
-        $menu->createItem(
+        $menu->addChildren(
             'user-header',
             [
                 'label' => 'My Account',
@@ -82,7 +82,7 @@ class UserManagerModule implements ModuleProviderInterface
             ]
         );
 
-        $menu->createItem(
+        $menu->addChildren(
             'user-header',
             [
                 'label' => 'Settings',

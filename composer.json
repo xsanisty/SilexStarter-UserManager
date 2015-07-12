@@ -1,7 +1,6 @@
 {
     "name": "xsanisty/silex-starter-user-manager",
     "description": "User and role manager utility of SilexStarter application",
-
     "license": "MIT",
     "authors": [
         {
@@ -13,10 +12,10 @@
             "email": "ikhsan017@gmail.com"
         }
     ],
-    "minimum-stability": "stable",
     "autoload" : {
         "psr-4": {
-            "Xsanisty\\" : [ "src/", "tests/"]
+            "Xsanisty\\UserManager\\" : [ "src/", "tests/"]
         }
-    }
+    },
+    "minimum-stability": "stable"
 }

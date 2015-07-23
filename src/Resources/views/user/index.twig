@@ -1,0 +1,38 @@
+{% set template = config.get('@silexstarter-dashboard.config.template') %}
+{% extends '@silexstarter-dashboard/'~ template ~'/index.twig' %}
+
+{% block stylesheet %}
+    {{parent()}}
+
+    {{ stylesheet('@silexstarter-datatable/css/dataTables.bootstrap.css') }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-condensed" id="usertable" style="width: 100%">
+        <thead>
+            <tr>
+                <td style="font-weight:bold;width: 30%">First Name</td>
+                <td style="font-weight:bold;width: 25%">Last Name</td>
+                <td style="font-weight:bold;width: 30%">Email</td>
+                <td style="font-weight:bold" class="text-center">Action</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" colspan="6">Data not loaded!</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascript %}
+    {{parent()}}
+
+    <script>var datatableUrl = '{{url_for('usermanager.user.datatable')}}';</script>
+
+    {{ javascript([
+        '@silexstarter-datatable/js/jquery.dataTables.min.js',
+        '@silexstarter-datatable/js/dataTables.bootstrap.min.js',
+        '@silexstarter-usermanager/js/usermanager.js'
+    ]) }}
+{% endblock %}

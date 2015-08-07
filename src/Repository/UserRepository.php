@@ -2,18 +2,22 @@
 
 namespace Xsanisty\UserManager\Repository;
 
+use Exception;
+use Cartalyst\Sentry\Sentry;
 use Cartalyst\Sentry\Users\ProviderInterface;
 use Xsanisty\Datatable\DatatableResponseBuilder;
 
 class UserRepository
 {
+    protected $sentry;
     protected $datatable;
     protected $userProvider;
 
-    public function __construct(ProviderInterface $userProvider, DatatableResponseBuilder $datatable)
+    public function __construct(Sentry $sentry, ProviderInterface $userProvider, DatatableResponseBuilder $datatable)
     {
         $this->userProvider = $userProvider;
         $this->datatable    = $datatable;
+        $this->sentry       = $sentry;
     }
 
     public function findAll()
@@ -38,25 +42,92 @@ class UserRepository
 
     public function delete($id)
     {
-        return $this->findById($id)->delete();
+        return  $this->userProvider
+                ->createModel()
+                ->where('id', '=', $id)
+                ->delete();
+    }
+
+    public function create(array $userData)
+    {
+        $groups = [];
+
+        if ($userData['password'] === $userData['confirm_password']) {
+            unset($userData['confirm_password']);
+        } else {
+            throw new Exception("Password and confirmation password mismatch", 1);
+        }
+
+        if (isset($userData['groups'])) {
+            $groups = $userData['groups'];
+            unset($userData['groups']);
+        }
+
+        if (isset($userData['permissions'])) {
+            $permissions = $userData['permissions'];
+            $userData['permissions'] = [];
+
+            foreach ($permissions as $perm) {
+                $userData['permissions'][$perm] = 1;
+            }
+        }
+
+        $user = $this->userProvider->create($userData);
+
+        foreach ($groups as $groupId) {
+            $group = $this->sentry->findGroupById($groupId);
+
+            $user->addGroup($group);
+        }
+    }
+
+    public function update(array $userData)
+    {
+
+    }
+
+    public function getCurrentUser()
+    {
+        return $this->sentry->getUser();
     }
 
     public function createDatatableResponse()
     {
-        return $this->datatable
-                    ->of($this->userProvider->createModel())
-                    ->setColumn(['first_name', 'last_name', 'email', 'id'])
-                    ->setFormatter(
-                        function ($row) {
-                            return [
-                                $row->first_name,
-                                $row->last_name,
-                                $row->email,
-                                '<a href="'.Url::to('usermanager.user.delete', ['id' => $row->id]).'" class="btn btn-xs btn-danger user-delete" style="margin-right: 5px">delete</a>'.
-                                '<a href="'.Url::to('usermanager.user.edit', ['id' => $row->id]).'" class="btn btn-xs btn-primary user-edit" style="margin-right: 5px">edit</a>'
-                            ];
-                        }
-                    )
-                    ->make();
+        $currentUser    = $this->getCurrentUser();
+        $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.user.edit']) : false;
+        $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.user.delete']) : false;
+
+        return  $this
+                ->datatable
+                ->of(
+                    $this->userProvider
+                         ->createModel()
+                         ->where('id', '<>', $currentUser->id)
+                )
+                ->setColumn(['first_name', 'last_name', 'email', 'activated', 'last_login', 'id'])
+                ->setFormatter(
+                    function ($row) use ($hasEditAccess, $hasDeleteAccess) {
+                        $editButton     = $hasEditAccess
+                                        ? '<button href="'.
+                                            Url::to('usermanager.user.edit', ['id' => $row->id]).
+                                            '" class="btn btn-xs btn-primary btn-edit" style="margin-right: 5px">edit</button>'
+                                        : '';
+                        $deleteButton   = $hasDeleteAccess
+                                        ? '<button href="'.
+                                            Url::to('usermanager.user.delete', ['id' => $row->id]).
+                                            '" class="btn btn-xs btn-danger btn-delete" style="margin-right: 5px">delete</button>'
+                                        : '';
+
+                        return [
+                            $row->first_name,
+                            $row->last_name,
+                            $row->email,
+                            $row->activated == 1 ? '<span class="label label-success">active</span>' : '<span class="label label-danger">suspended</span>',
+                            $row->last_login ? $row->last_login->format('Y-m-d H:i') : '',
+                            $editButton.$deleteButton
+                        ];
+                    }
+                )
+                ->make();
     }
 }

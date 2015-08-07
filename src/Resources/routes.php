@@ -3,57 +3,44 @@
 Route::group(
     '/admin',
     function () {
-        Route::get(
-            '/user/settings',
-            'Xsanisty\UserManager\Controller\AccountController:settings',
-            ['as' => 'usermanager.settings']
-        );
+        Route::get('/user/settings', 'AccountController:settings', ['as' => 'usermanager.settings']);
+        Route::get('/my_account', 'AccountController:myAccount', ['as' => 'usermanager.my_account']);
 
-        Route::get(
-            '/my_account',
-            'Xsanisty\UserManager\Controller\AccountController:myAccount',
-            ['as' => 'usermanager.my_account']
-        );
-
-
+        Route::post('/user/datatable', 'UserController:datatable', ['as' => 'usermanager.user.datatable', 'permission' => 'usermanager.user.read']);
         Route::resource(
             '/user',
-            'Xsanisty\UserManager\Controller\UserController',
-            ['as' => 'usermanager.user']
+            'UserController',
+            [
+                'as' => 'usermanager.user',
+                'permission' => 'usermanager.user',
+                'only' => ['index', 'store', 'update', 'delete', 'edit']
+            ]
         );
 
-        Route::post(
-            '/user/datatable',
-            'Xsanisty\UserManager\Controller\UserController:datatable',
-            ['as' => 'usermanager.user.datatable']
-        );
-
+        Route::post('/group/datatable', 'GroupController:datatable', ['as' => 'usermanager.group.datatable']);
         Route::resource(
             '/group',
-            'Xsanisty\UserManager\Controller\GroupController',
-            ['as' => 'usermanager.group']
+            'GroupController',
+            [
+                'as' => 'usermanager.group',
+                'permission' => 'usermanager.group',
+                'only' => ['index', 'store', 'update', 'delete', 'edit']
+            ]
         );
 
-        Route::post(
-            '/group/datatable',
-            'Xsanisty\UserManager\Controller\GroupController:datatable',
-            ['as' => 'usermanager.group.datatable']
-        );
-
+        Route::post('/permission/datatable', 'PermissionController:datatable', ['as' => 'usermanager.permission.datatable']);
         Route::resource(
             '/permission',
-            'Xsanisty\UserManager\Controller\PermissionController',
-            ['as' => 'usermanager.permission']
+            'PermissionController',
+            [
+                'as' => 'usermanager.permission',
+                'permission' => 'usermanager.permission',
+                'only' => ['index', 'store', 'update', 'delete', 'edit']
+            ]
         );
-
-        Route::post(
-            '/permission/datatable',
-            'Xsanisty\UserManager\Controller\PermissionController:datatable',
-            ['as' => 'usermanager.permission.datatable']
-        );
-
     },
     [
-        'before'    => 'admin.auth'
+        'before'    => 'admin.auth',
+        'namespace' => 'Xsanisty\UserManager\Controller'
     ]
 );

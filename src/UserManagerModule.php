@@ -9,6 +9,7 @@ use Silex\Application;
 use SilexStarter\Module\ModuleInfo;
 use SilexStarter\Module\ModuleResource;
 use SilexStarter\Contracts\ModuleProviderInterface;
+use Xsanisty\Admin\DashboardModule;
 
 class UserManagerModule implements ModuleProviderInterface
 {
@@ -51,6 +52,7 @@ class UserManagerModule implements ModuleProviderInterface
                 'assets'        => 'Resources/assets',
                 'controllers'   => 'Controller',
                 'commands'      => 'Command',
+                'migrations'    => 'Migration'
             ]
         );
     }
@@ -60,17 +62,36 @@ class UserManagerModule implements ModuleProviderInterface
         $this->app->registerServices(
             $this->app['config']['@silexstarter-usermanager.services']
         );
+
+        $provider = $this;
+
+        $this->app['dispatcher']->addListener(
+            DashboardModule::INIT,
+            function () use ($provider) {
+                $provider->registerSidebarMenu();
+                $provider->registerNavbarMenu();
+            },
+            2
+        );
     }
 
     public function boot()
     {
-        $this->registerSidebarMenu();
-        $this->registerNavbarMenu();
     }
 
+
+    /**
+     * Register menu item to navbar menu
+     */
     protected function registerNavbarMenu()
     {
-        $menu = Menu::get('admin_navbar')->createItem(
+        $user   = $this->app['sentry']->getUser();
+        $name   = $user ? $user->first_name.' '.$user->last_name : '';
+        $email  = $user ? $user->email : '';
+        $name   = trim($name) ? $name : $email;
+
+
+        $menu = $this->app['menu_manager']->get('admin_navbar')->createItem(
             'user',
             [
                 'icon'  => 'user',
@@ -81,7 +102,7 @@ class UserManagerModule implements ModuleProviderInterface
         $menu->addChildren(
             'user-header',
             [
-                'label' => 'Account',
+                'label' => $name,
                 'class' => 'header'
             ]
         );
@@ -94,7 +115,7 @@ class UserManagerModule implements ModuleProviderInterface
                 'label' => 'My Account',
                 'class' => 'link',
                 'icon'  => 'user',
-                'url'   => Url::to('usermanager.my_account')
+                'url'   => 'usermanager.my_account'
             ]
         );
 
@@ -104,7 +125,7 @@ class UserManagerModule implements ModuleProviderInterface
                 'label' => 'Settings',
                 'class' => 'link',
                 'icon'  => 'cog',
-                'url'   => Url::to('usermanager.settings')
+                'url'   => 'usermanager.settings'
             ]
         );
 
@@ -116,49 +137,56 @@ class UserManagerModule implements ModuleProviderInterface
                 'label' => 'Logout',
                 'class' => 'link',
                 'icon'  => 'sign-out',
-                'url'   => Url::to('admin.logout')
+                'url'   => 'admin.logout'
             ]
         );
     }
 
+    /**
+     * Register menu item to sidebar menu
+     */
     protected function registerSidebarMenu()
     {
-        $menu   = Menu::get('admin_sidebar')->createItem(
+        $menu   = $this->app['menu_manager']->get('admin_sidebar')->createItem(
             'user-manager',
             [
-                'icon'  => 'users',
-                'label' => 'User and Group',
-                'url'   => '#'
+                'icon'          => 'users',
+                'label'         => 'User and Group',
+                'url'           => '#',
+                'permission'    => ['usermanager', 'usermanager.user.read', 'usermanager.group.read', 'usermanager.permission.read']
             ]
         );
 
         $menu->addChildren(
             'manage-user',
             [
-                'icon'  => 'user',
-                'label' => 'Users',
-                'title' => 'Manage Users',
-                'url'   => Url::to('usermanager.user.index')
+                'icon'          => 'user',
+                'label'         => 'Users',
+                'title'         => 'Manage Users',
+                'url'           => 'usermanager.user.index',
+                'permission'    => ['usermanager.user.read']
             ]
         );
 
         $menu->addChildren(
             'manage-group',
             [
-                'icon'  => 'users',
-                'label' => 'Groups',
-                'title' => 'Manage Groups',
-                'url'   => Url::to('usermanager.group.index')
+                'icon'          => 'users',
+                'label'         => 'Groups',
+                'title'         => 'Manage Groups',
+                'url'           => 'usermanager.group.index',
+                'permission'    => ['usermanager.group.read']
             ]
         );
 
         $menu->addChildren(
             'manage-permission',
             [
-                'icon'  => 'th-list',
-                'label' => 'Permissions',
-                'title' => 'Manage Permissions',
-                'url'   => Url::to('usermanager.permission.index')
+                'icon'          => 'th-list',
+                'label'         => 'Permissions',
+                'title'         => 'Manage Permissions',
+                'url'           => 'usermanager.permission.index',
+                'permission'    => ['usermanager.permission.read']
             ]
         );
     }

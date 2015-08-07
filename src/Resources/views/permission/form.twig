@@ -1,0 +1,37 @@
+<div class="row" style="max-height: 500px; overflow: auto">
+    <div class="col-md-10 col-md-offset-1">
+        <form action="" class="form-horizontal" id="permission_form" method="post">
+            <input type="hidden" id="_method" name="_method" value="POST">
+            <input type="hidden" id="id" name="id">
+            <div class="form-group">
+                <label for="name" class="col-md-4">Permission</label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input id="name" name="name" type="text" class="form-control input-sm">
+                        <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="Use lowercase and dot as delimiter, 'permission.sub_permission' is preferred">
+                            <i class="fa fa-fw fa-info-circle"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="category" class="col-md-4">Category</label>
+                <div class="col-md-8">
+                    <input id="category" name="category" type="text" class="form-control input-sm">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description" class="col-md-4">Description</label>
+                <div class="col-md-8">
+                    <input id="description" name="description" type="text" class="form-control input-sm">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button id="btn-save" class="btn btn-sm btn-primary pull-right">Save</button>
+                    <button id="btn-cancel" class="btn btn-sm btn-danger pull-right" style="margin-right: 5px" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

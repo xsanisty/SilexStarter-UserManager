@@ -1,0 +1,94 @@
+<div class="row" style="max-height: 500px; overflow: auto">
+    <div class="col-md-10 col-md-offset-1">
+        <form action="" class="form-horizontal" id="user_form" method="post">
+            <input type="hidden" id="_method" name="_method" value="POST">
+            <input type="hidden" id="id" name="id">
+            <div class="form-group">
+                <label for="email" class="col-md-4">Email</label>
+                <div class="col-md-8">
+                    <input id="email" name="email" type="text" class="form-control input-sm" value="{{userdata.email | default('')}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="first_name" class="col-md-4">First Name</label>
+                <div class="col-md-8">
+                    <input id="first_name" name="first_name" type="text" class="form-control input-sm" value="{{userdata.first_name | default('')}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name" class="col-md-4">Last Name</label>
+                <div class="col-md-8">
+                    <input id="last_name" name="last_name" type="text" class="form-control input-sm" value="{{userdata.last_name | default('')}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="group" class="col-md-4">Status</label>
+                <div class="col-md-8">
+                    <select id="activated" name="activated" class="selectpicker form-control input-sm">
+                        <option value="1">Active</option>
+                        <option value="0">Suspended</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="col-md-4">Password</label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input type="password" name="password" id="password" class="form-control input-sm" >
+                        <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="If you are edit existing user, fill this field only when you want to change password">
+                            <i class="fa fa-fw fa-info-circle"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password" class="col-md-4">Confirm Password</label>
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <input id="confirm_password" name="confirm_password" type="password" class="form-control input-sm">
+                        <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="Re-type your password to avoid typo">
+                            <i class="fa fa-fw fa-info-circle"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="group" class="col-md-4">Assigned Group</label>
+                <div class="col-md-8">
+                    <select id="groups" name="groups[]" class="selectpicker form-control input-sm" multiple="true">
+                        {% for group in groups %}
+                            <option value="{{group.id}}">{{group.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-4">Permission</label>
+                <div class="col-md-8">
+                    <select id="permissions" name="permissions[]" class="selectpicker form-control input-sm" multiple="true">
+                        {% for category, permGroup in permissions  %}
+                            {% if category is not empty %}<optgroup label="{{category}}">{% endif %}
+                                {% for perm in permGroup %}
+                                    <option value="{{perm.name}}">{{perm.description}}</option>
+                                {% endfor %}
+                            {% if category is empty %}</optgroup>{% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <button id="btn-save" class="btn btn-sm btn-primary pull-right">Save</button>
+                    <button id="btn-cancel" class="btn btn-sm btn-danger pull-right" style="margin-right: 5px" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

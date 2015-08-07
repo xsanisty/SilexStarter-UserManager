@@ -1,6 +1,52 @@
 {% set template = config.get('@silexstarter-dashboard.config.template') %}
 {% extends '@silexstarter-dashboard/'~ template ~'/index.twig' %}
+{# Stylesheet Block #}
+{% block stylesheet %}
+    {{parent()}}
+
+    {{ stylesheet('@silexstarter-datatable/css/dataTables.bootstrap.css') }}
+{% endblock %}
+
+{% block breadcrumb %}
+    <a href="{{url('admin.home')}}">Home</a> / <a href="#">Group</a>
+{% endblock %}
 
 {% block content %}
-    hi hi
+    <table class="table table-condensed table-striped" id="group_table" style="width: 100%">
+        <thead>
+            <tr>
+                <th style="width: 25%">Group Name</th>
+                <th style="width: 60%">Permission</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" colspan="3">Data not loaded!</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
+
+{# Javascript Block #}
+{% block javascript %}
+    {{parent()}}
+
+    <script>
+        var datatableUrl= '{{url_for('usermanager.group.datatable')}}';
+        var datatableId = '#group_table';
+        var formId      = '#group_form';
+        var modalId     = '#group_modal';
+        var createLabel = 'Add new group';
+    </script>
+
+    {{ javascript([
+        '@silexstarter-datatable/js/jquery.dataTables.min.js',
+        '@silexstarter-datatable/js/dataTables.bootstrap.min.js',
+        '@silexstarter-usermanager/js/datatable.js'
+    ]) }}
+
+    {% if user.hasAnyAccess(['admin', 'usermanager.group.create']) %}
+        {{ javascript('@silexstarter-usermanager/js/create.js') }}
+    {% endif %}
 {% endblock %}

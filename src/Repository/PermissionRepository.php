@@ -10,13 +10,13 @@ class PermissionRepository
 {
     protected $permission;
     protected $datatable;
-    protected $userRepo;
+    protected $userRepository;
 
-    public function __construct(Permission $permission, UserRepository $userRepo, DatatableResponseBuilder $datatable)
+    public function __construct(Permission $permission, UserRepository $userRepository, DatatableResponseBuilder $datatable)
     {
-        $this->permission = $permission;
-        $this->datatable = $datatable;
-        $this->userRepo = $userRepo;
+        $this->permission       = $permission;
+        $this->datatable        = $datatable;
+        $this->userRepository   = $userRepository;
     }
 
     public function groupByCategory()
@@ -56,7 +56,7 @@ class PermissionRepository
 
     public function createDatatableResponse()
     {
-        $currentUser    = $this->userRepo->getCurrentUser();
+        $currentUser    = $this->userRepository->getCurrentUser();
         $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.permission.edit']) : false;
         $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.permission.delete']) : false;
 

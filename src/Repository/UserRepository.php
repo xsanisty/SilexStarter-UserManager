@@ -42,10 +42,7 @@ class UserRepository
 
     public function delete($id)
     {
-        return  $this->userProvider
-                ->createModel()
-                ->where('id', '=', $id)
-                ->delete();
+        return  $this->findById($id)->delete();
     }
 
     public function create(array $userData)
@@ -81,9 +78,38 @@ class UserRepository
         }
     }
 
-    public function update(array $userData)
+    public function update($userId, array $userData)
     {
+        $user   = $this->sentry->findUserById($userId);
+        $groups = $userData['groups'];
 
+        if ($userData['password'] === $userData['confirm_password']) {
+            unset($userData['confirm_password']);
+        } else {
+            throw new Exception("Password and confirmation password mismatch", 1);
+        }
+
+        if (!$userData['password']) {
+            unset($userData['password']);
+        }
+
+        unset($userData['groups']);
+
+        foreach ($user->getGroups() as $group) {
+            $user->removeGroup($group);
+        }
+
+        foreach ($userData as $attribute => $value) {
+            $user->$attribute = $value;
+        }
+
+        $user->save();
+
+        foreach ($groups as $groupId) {
+            $group = $this->sentry->findGroupById($groupId);
+
+            $user->addGroup($group);
+        }
     }
 
     public function getCurrentUser()

@@ -21,7 +21,7 @@ class RepositoryServiceProvider implements ServiceProviderInterface
 
         $app['Xsanisty\UserManager\Repository\GroupRepository'] = $app->share(
             function (Application $app) {
-                return new GroupRepository($app['sentry.group'], $app['datatable']);
+                return new GroupRepository($app['sentry.group'], $app['Xsanisty\UserManager\Repository\UserRepository'], $app['datatable']);
             }
         );
 

@@ -125,7 +125,26 @@ class UserController extends DispatcherAwareController
 
     public function update($id)
     {
+        try {
+            $userData = Request::get();
 
+            unset($userData['_method']);
+            unset($userData['id']);
+
+            $this->userRepository->update($id, $userData);
+
+            return Response::ajax('User has been updated');
+        } catch (Exception $e) {
+            return Response::ajax(
+                'Error occured while updating user',
+                500,
+                false,
+                [[
+                    'message'   => $e->getMessage(),
+                    'code'      => $e->getCode()
+                ]]
+            );
+        }
     }
 
     public function delete($id)

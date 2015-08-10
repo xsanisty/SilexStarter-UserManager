@@ -4,7 +4,10 @@
 {% block stylesheet %}
     {{parent()}}
 
-    {{ stylesheet('@silexstarter-datatable/css/dataTables.bootstrap.css') }}
+    {{ stylesheet([
+        '@silexstarter-datatable/css/dataTables.bootstrap.css',
+        '@silexstarter-usermanager/css/bootstrap-select.min.css',
+    ]) }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -15,17 +18,22 @@
     <table class="table table-condensed table-striped" id="group_table" style="width: 100%">
         <thead>
             <tr>
-                <th style="width: 25%">Group Name</th>
-                <th style="width: 60%">Permission</th>
-                <th class="text-center">Action</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th class="text-center" style="width: 15%">Action</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="text-center" colspan="3">Data not loaded!</td>
+                <td class="text-center" colspan="2">Data not loaded!</td>
             </tr>
         </tbody>
     </table>
+{% endblock %}
+
+{% block modal %}
+    {{parent()}}
+    {% include '@silexstarter-usermanager/group/modal.twig' %}
 {% endblock %}
 
 {# Javascript Block #}
@@ -43,6 +51,7 @@
     {{ javascript([
         '@silexstarter-datatable/js/jquery.dataTables.min.js',
         '@silexstarter-datatable/js/dataTables.bootstrap.min.js',
+        '@silexstarter-usermanager/js/bootstrap-select.min.js',
         '@silexstarter-usermanager/js/datatable.js'
     ]) }}
 

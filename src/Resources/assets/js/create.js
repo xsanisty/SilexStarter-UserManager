@@ -7,6 +7,7 @@ $(document).ready(function(){
 
         $('.selectpicker').selectpicker('render');
         $('#_method').val('POST');
+        $('#id').val('');
         $(modalId).modal('show');
     });
 });

@@ -83,7 +83,7 @@ $(document).ready(function(){
                     alert('Your session is expired!\n\nYou will be redirected to the login page shortly.');
                     window.location.reload();
                 } else {
-                    alert('Error occured while trying to get user info!');
+                    alert('Error occured while trying to get data!');
                 }
             }
         });
@@ -91,7 +91,7 @@ $(document).ready(function(){
     }).on('click', '.btn-delete', function(e){
         e.preventDefault();
 
-        if(confirm('Are you sure want to delete this user?')){
+        if(confirm('Are you sure want to delete this data?')){
             var $link = $(this);
             var url = $link.attr('href');
 

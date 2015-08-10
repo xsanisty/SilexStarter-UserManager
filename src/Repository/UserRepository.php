@@ -81,7 +81,7 @@ class UserRepository
     public function update($userId, array $userData)
     {
         $user   = $this->sentry->findUserById($userId);
-        $groups = $userData['groups'];
+        $groups = isset($userData['groups']) ? $userData['groups'] : [];
 
         if ($userData['password'] === $userData['confirm_password']) {
             unset($userData['confirm_password']);
@@ -96,14 +96,16 @@ class UserRepository
         unset($userData['groups']);
 
         foreach ($user->getGroups() as $group) {
-            $user->removeGroup($group);
+            if (!in_array($group->id, $groups)) {
+                $user->removeGroup($group);
+            } else {
+                $key = array_search($group->id, $groups);
+
+                unset($groups[$key]);
+            }
         }
 
-        foreach ($userData as $attribute => $value) {
-            $user->$attribute = $value;
-        }
-
-        $user->save();
+        $user->update($userData);
 
         foreach ($groups as $groupId) {
             $group = $this->sentry->findGroupById($groupId);

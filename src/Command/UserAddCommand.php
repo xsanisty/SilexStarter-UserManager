@@ -34,50 +34,31 @@ class UserAddCommand extends Command
 
     protected function populateUserData(InputInterface $input, OutputInterface $output)
     {
-
         $helper = $this->getHelper('question');
 
-        $firstName = $helper->ask(
-            $input,
-            $output,
-            new Question('What is her/his first name? ')
-        );
+        $fName  = $helper->ask($input, $output, new Question('What is her/his first name? '));
+        $lName  = $helper->ask($input, $output, new Question('And her/his last name? '));
+        $email  = $helper->ask($input, $output, new Question('Please provide email address for login: '));
+        $admin  = $helper->ask($input, $output, new Question('Should this user become administrator? <comment>[y/N]</comment> ', false));
+        $passwd = $helper->ask($input, $output, (new Question('Please provide the password: '))->setHidden(true));
+        $confirm= $helper->ask($input, $output, (new Question('Can you retype the password just to be sure? '))->setHidden(true));
 
-        $lastName = $helper->ask(
-            $input,
-            $output,
-            new Question('And her/his last name? ')
-        );
-
-        $email = $helper->ask(
-            $input,
-            $output,
-            new Question('Please provide email address for login: ')
-        );
-
-        $password  = $helper->ask(
-            $input,
-            $output,
-            (new Question('Please provide the password: '))->setHidden(true)
-        );
-
-        $confirmPassword  = $helper->ask(
-            $input,
-            $output,
-            (new Question('Can you retype the password just to be sure? '))->setHidden(true)
-        );
-
-        if ($password !== $confirmPassword) {
+        if ($passwd !== $confirm) {
             throw new Exception("Sorry, but it seems you make mistake when typing your password");
         }
 
-        return [
+        $user = [
             'email' => $email,
-            'password' => $password,
-            'first_name' => $firstName,
-            'last_name' => $lastName,
+            'password' => $passwd,
+            'first_name' => $fName,
+            'last_name' => $lName,
             'activated' => 1
         ];
 
+        if ($admin) {
+            $user['permissions'] = ['admin' => 1];
+        }
+
+        return $user;
     }
 }

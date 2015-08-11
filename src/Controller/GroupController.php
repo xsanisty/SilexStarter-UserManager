@@ -30,6 +30,7 @@ class GroupController extends DispatcherAwareController
             '@silexstarter-usermanager/group/index',
             [
                 'title'         => 'Manage User Groups',
+                'page_title'    => 'Manage User Groups',
                 'user'          => $this->userRepository->getCurrentUser(),
                 'permissions'   => $this->permissionRepository->groupByCategory()
             ]

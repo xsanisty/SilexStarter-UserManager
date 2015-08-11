@@ -40,10 +40,11 @@ class UserController extends DispatcherAwareController
         return Response::view(
             '@silexstarter-usermanager/user/index',
             [
-                'title' => 'Manage Users',
-                'permissions' => $this->permissionRepository->groupByCategory(),
-                'groups' => $this->groupRepository->findAll(),
-                'user'  => $this->userRepository->getCurrentUser()
+                'title'         => 'Manage Users',
+                'page_title'    => 'Manage Users',
+                'permissions'   => $this->permissionRepository->groupByCategory(),
+                'groups'        => $this->groupRepository->findAll(),
+                'user'          => $this->userRepository->getCurrentUser()
             ]
         );
     }
@@ -139,10 +140,10 @@ class UserController extends DispatcherAwareController
                 'Error occured while updating user',
                 500,
                 false,
-                [[
+                [
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]]
+                ]
             );
         }
     }
@@ -158,10 +159,10 @@ class UserController extends DispatcherAwareController
                 'Error occured while deleting user',
                 500,
                 false,
-                [[
+                [
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]]
+                ]
             );
         }
     }

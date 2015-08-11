@@ -27,9 +27,9 @@ class PermissionController extends DispatcherAwareController
         return Response::view(
             '@silexstarter-usermanager/permission/index',
             [
-                'title'     => 'Manager User Permissions',
+                'title'     => 'Manage User Permissions',
                 'user'      => $this->userRepo->getCurrentUser(),
-                'page_title'=> 'Manage Permission'
+                'page_title'=> 'Manage User Permissions'
             ]
         );
     }

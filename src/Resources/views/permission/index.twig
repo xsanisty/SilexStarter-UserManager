@@ -14,6 +14,16 @@
 
 {# Content Block #}
 {% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger">
+                <p>
+                    This permissions list only acts as reference and will not affect to existing users and groups,
+                    deleting or adding permissions only affect on future user or group change and may causing some feature inaccessible.
+                </p>
+            </div>
+        </div>
+    </div>
     <table class="table table-condensed table-striped" id="permission_table" style="width: 100%">
         <thead>
             <tr>

@@ -119,16 +119,6 @@ class UserManagerModule implements ModuleProviderInterface
             ]
         );
 
-        $menu->addChildren(
-            'user-settings',
-            [
-                'label' => 'Settings',
-                'class' => 'link',
-                'icon'  => 'cog',
-                'url'   => 'usermanager.settings'
-            ]
-        );
-
         $menu->addChildren('logout-divider', [ 'class' => 'divider' ]);
 
         $menu->addChildren(

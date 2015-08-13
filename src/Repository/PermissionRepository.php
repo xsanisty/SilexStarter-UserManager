@@ -21,7 +21,7 @@ class PermissionRepository
 
     public function groupByCategory()
     {
-        return $this->permission->all()->groupBy('category');
+        return $this->permission->orderBy('category')->get()->groupBy('category');
     }
 
     public function findAll()

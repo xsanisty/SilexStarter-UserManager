@@ -20,14 +20,15 @@ class GroupController extends DispatcherAwareController
         UserRepository $userRepository,
         PermissionRepository $permissionRepository
     ) {
-        $this->groupRepository        = $groupRepository;
-        $this->userRepository         = $userRepository;
-        $this->permissionRepository   = $permissionRepository;
+        $this->groupRepository      = $groupRepository;
+        $this->userRepository       = $userRepository;
+        $this->permissionRepository = $permissionRepository;
     }
 
     public function index()
     {
         $this->getDispatcher()->dispatch(DashboardModule::INIT);
+
         Menu::get('admin_sidebar')->setActive('user-manager.manage-group');
 
         return View::make(
@@ -50,6 +51,7 @@ class GroupController extends DispatcherAwareController
     {
         try {
             $group = Request::get();
+
             unset($group['_method']);
             unset($group['id']);
 
@@ -80,6 +82,7 @@ class GroupController extends DispatcherAwareController
     {
         try {
             $group = Request::get();
+
             unset($group['_method']);
             unset($group['id']);
 

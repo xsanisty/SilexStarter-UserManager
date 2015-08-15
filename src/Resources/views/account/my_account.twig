@@ -1,0 +1,99 @@
+{% set template = config.get('@silexstarter-dashboard.config.template') %}
+{% extends '@silexstarter-dashboard/'~ template ~'/index.twig' %}
+
+{% block breadcrumb %}
+    <a href="{{url_for('admin.home')}}">Home</a> / <a href="#">My Account</a>
+{% endblock %}
+
+{% block content %}
+
+{% if success is not empty %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-success">{{success}}</div>
+    </div>
+</div>
+{% endif %}
+
+{% if error is not empty %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="alert alert-danger">{{error}}</div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="widget">
+            <div class="widget-title">
+                <i class="fa fa-user"></i> My Account Information
+                <div class="clearfix"></div>
+            </div>
+            <div class="widget-body">
+                <form action="{{url_for('usermanager.update_account')}}" class="form-horizontal" id="user_form" method="post">
+                    <input type="hidden" id="_method" name="_method" value="POST">
+                    <input type="hidden" id="id" name="id">
+                    <div class="form-group">
+                        <label for="email" class="col-md-4">Email</label>
+                        <div class="col-md-8">
+                            {{userdata.email}}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="first_name" class="col-md-4">First Name</label>
+                        <div class="col-md-8">
+                            <input id="first_name" name="first_name" type="text" class="form-control input-sm" value="{{userdata.first_name | default('')}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="last_name" class="col-md-4">Last Name</label>
+                        <div class="col-md-8">
+                            <input id="last_name" name="last_name" type="text" class="form-control input-sm" value="{{userdata.last_name | default('')}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="col-md-4">Password</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="password" name="password" id="password" class="form-control input-sm" >
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="Fill only when you want to change your password">
+                                    <i class="fa fa-fw fa-info-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm_password" class="col-md-4">Confirm Password</label>
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input id="confirm_password" name="confirm_password" type="password" class="form-control input-sm">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="Re-type your password to avoid typo">
+                                    <i class="fa fa-fw fa-info-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="group" class="col-md-4">Assigned Group</label>
+                        <div class="col-md-8">
+                            {% for group in groups %}{{group.name}},{% else %} No group assigned{% endfor %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <button id="btn-save" class="btn btn-sm btn-primary pull-right">Save</button>
+                            <a href="{{url_for('admin.home')}}" class="btn btn-sm btn-danger pull-right" style="margin-right: 5px" data-dismiss="modal">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

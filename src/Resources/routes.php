@@ -1,10 +1,11 @@
 <?php
 
 Route::group(
-    '/admin',
+    Config::get('@silexstarter-dashboard.config.admin_prefix'),
     function () {
         Route::get('/user/settings', 'AccountController:settings', ['as' => 'usermanager.settings']);
         Route::get('/my_account', 'AccountController:myAccount', ['as' => 'usermanager.my_account']);
+        Route::post('/my_account', 'AccountController:updateAccount', ['as' => 'usermanager.update_account']);
 
         Route::post('/user/datatable', 'UserController:datatable', ['as' => 'usermanager.user.datatable', 'permission' => 'usermanager.user.read']);
         Route::resource(

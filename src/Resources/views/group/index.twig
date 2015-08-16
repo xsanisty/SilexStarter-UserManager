@@ -6,6 +6,7 @@
 
     {{ stylesheet([
         '@silexstarter-datatable/css/dataTables.bootstrap.css',
+        '@silexstarter-datatable/css/responsive.bootstrap.min.css',
         '@silexstarter-usermanager/css/bootstrap-select.min.css',
     ]) }}
 {% endblock %}
@@ -18,9 +19,9 @@
     <table class="table table-condensed table-striped" id="group_table" style="width: 100%">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th class="text-center" style="width: 15%">Action</th>
+                <th class="all">Name</th>
+                <th class="desktop">Description</th>
+                <th class="desktop text-center" style="width: 15%">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -51,6 +52,7 @@
     {{ javascript([
         '@silexstarter-datatable/js/jquery.dataTables.min.js',
         '@silexstarter-datatable/js/dataTables.bootstrap.min.js',
+        '@silexstarter-datatable/js/dataTables.responsive.min.js',
         '@silexstarter-usermanager/js/bootstrap-select.min.js',
         '@silexstarter-usermanager/js/datatable.js'
     ]) }}

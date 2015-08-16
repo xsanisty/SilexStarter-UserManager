@@ -2,6 +2,7 @@ $(document).ready(function(){
     var $datatable = $(datatableId).DataTable({
         "processing": true,
         "serverSide": true,
+        "responsive": true,
         "dom" : "<'row'<'col-md-12'<'widget'<'widget-title'<'row'<'col-md-5'<'#icon-wrapper'>><'col-md-3'l><'col-md-4'f>><'clearfix'>><'widget-body flow no-padding'tr><'widget-title'<'col-sm-5'i><'col-sm-7'p><'clearfix'>>>>",
         "columnDefs": [
             {

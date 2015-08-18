@@ -7,7 +7,7 @@ use Cartalyst\Sentry\Sentry;
 use Cartalyst\Sentry\Users\ProviderInterface;
 use Xsanisty\Datatable\DatatableResponseBuilder;
 
-class UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     protected $sentry;
     protected $datatable;

@@ -6,13 +6,13 @@ namespace Xsanisty\UserManager\Repository;
 use Xsanisty\UserManager\Model\Permission;
 use Xsanisty\Datatable\DatatableResponseBuilder;
 
-class PermissionRepository
+class PermissionRepository implements PermissionRepositoryInterface
 {
     protected $permission;
     protected $datatable;
     protected $userRepository;
 
-    public function __construct(Permission $permission, UserRepository $userRepository, DatatableResponseBuilder $datatable)
+    public function __construct(Permission $permission, UserRepositoryInterface $userRepository, DatatableResponseBuilder $datatable)
     {
         $this->permission       = $permission;
         $this->datatable        = $datatable;

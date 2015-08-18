@@ -4,9 +4,9 @@ namespace Xsanisty\UserManager\Controller;
 
 use Exception;
 use SilexStarter\Response\AjaxStatusResponse;
-use Xsanisty\UserManager\Repository\UserRepository;
-use Xsanisty\UserManager\Repository\GroupRepository;
-use Xsanisty\UserManager\Repository\PermissionRepository;
+use Xsanisty\UserManager\Repository\GroupRepositoryInterface;
+use Xsanisty\UserManager\Repository\UserRepositoryInterface;
+use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
 use Xsanisty\Admin\DashboardModule;
 use SilexStarter\Controller\DispatcherAwareController;
 
@@ -17,9 +17,9 @@ class UserController extends DispatcherAwareController
     protected $permissionRepository;
 
     public function __construct(
-        UserRepository $userRepository,
-        GroupRepository $groupRepository,
-        PermissionRepository $permissionRepository
+        UserRepositoryInterface $userRepository,
+        GroupRepositoryInterface $groupRepository,
+        PermissionRepositoryInterface $permissionRepository
     ) {
         $this->userRepository = $userRepository;
         $this->groupRepository = $groupRepository;

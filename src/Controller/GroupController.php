@@ -5,9 +5,9 @@ namespace Xsanisty\UserManager\Controller;
 use Exception;
 use Xsanisty\Admin\DashboardModule;
 use SilexStarter\Controller\DispatcherAwareController;
-use Xsanisty\UserManager\Repository\GroupRepository;
-use Xsanisty\UserManager\Repository\UserRepository;
-use Xsanisty\UserManager\Repository\PermissionRepository;
+use Xsanisty\UserManager\Repository\GroupRepositoryInterface;
+use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
+use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 
 class GroupController extends DispatcherAwareController
 {
@@ -16,9 +16,9 @@ class GroupController extends DispatcherAwareController
     protected $permissionRepository;
 
     public function __construct(
-        GroupRepository $groupRepository,
-        UserRepository $userRepository,
-        PermissionRepository $permissionRepository
+        GroupRepositoryInterface $groupRepository,
+        UserRepositoryInterface $userRepository,
+        PermissionRepositoryInterface $permissionRepository
     ) {
         $this->groupRepository      = $groupRepository;
         $this->userRepository       = $userRepository;

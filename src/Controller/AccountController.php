@@ -7,12 +7,13 @@ use InvalidArgumentException;
 use Xsanisty\Admin\DashboardModule;
 use Xsanisty\UserManager\Repository\UserRepository;
 use SilexStarter\Controller\DispatcherAwareController;
+use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 
 class AccountController extends DispatcherAwareController
 {
     protected $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }

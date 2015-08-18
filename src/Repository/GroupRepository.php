@@ -5,14 +5,14 @@ namespace Xsanisty\UserManager\Repository;
 use Cartalyst\Sentry\Groups\ProviderInterface;
 use Xsanisty\Datatable\DatatableResponseBuilder;
 
-class GroupRepository
+class GroupRepository implements GroupRepositoryInterface
 {
 
     protected $groupProvider;
     protected $datatable;
     protected $userRepository;
 
-    public function __construct(ProviderInterface $groupProvider, UserRepository $userRepository, DatatableResponseBuilder $datatable)
+    public function __construct(ProviderInterface $groupProvider, UserRepositoryInterface $userRepository, DatatableResponseBuilder $datatable)
     {
         $this->groupProvider    = $groupProvider;
         $this->datatable        = $datatable;

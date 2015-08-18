@@ -5,15 +5,15 @@ namespace Xsanisty\UserManager\Controller;
 use Exception;
 use Xsanisty\Admin\DashboardModule;
 use SilexStarter\Controller\DispatcherAwareController;
-use Xsanisty\UserManager\Repository\PermissionRepository;
-use Xsanisty\UserManager\Repository\UserRepository;
+use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
+use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 
 class PermissionController extends DispatcherAwareController
 {
     protected $userRepo;
     protected $permissionRepo;
 
-    public function __construct(PermissionRepository $permissionRepo, UserRepository $userRepo)
+    public function __construct(PermissionRepositoryInterface $permissionRepo, UserRepositoryInterface $userRepo)
     {
         $this->userRepo = $userRepo;
         $this->permissionRepo = $permissionRepo;

@@ -3,7 +3,6 @@
 namespace Xsanisty\UserManager\Controller;
 
 use Exception;
-use SilexStarter\Response\AjaxStatusResponse;
 use Xsanisty\UserManager\Repository\GroupRepositoryInterface;
 use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;

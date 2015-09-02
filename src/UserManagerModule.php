@@ -91,43 +91,28 @@ class UserManagerModule implements ModuleProviderInterface
         $name   = trim($name) ? $name : $email;
 
 
-        $menu = $this->app['menu_manager']->get('admin_navbar')->createItem(
-            'user',
-            [
-                'icon'  => 'user',
-                'url'   => '#user',
-            ]
-        );
+        $menu = $this->app['menu_manager']->get('admin_navbar')->getItem('user');
 
         $menu->addChildren(
-            'user-header',
+            'user-header-divider',
             [
-                'label' => $name,
-                'class' => 'header'
+                'class' => 'divider',
+                'options'   => [
+                    'position' => 'after:user-header'
+                ]
             ]
         );
-
-        $menu->addChildren('user-header-divider', [ 'class' => 'divider' ]);
 
         $menu->addChildren(
             'my-account',
             [
-                'label' => 'My Account',
-                'class' => 'link',
-                'icon'  => 'user',
-                'url'   => 'usermanager.my_account'
-            ]
-        );
-
-        $menu->addChildren('logout-divider', [ 'class' => 'divider' ]);
-
-        $menu->addChildren(
-            'user-logout',
-            [
-                'label' => 'Logout',
-                'class' => 'link',
-                'icon'  => 'sign-out',
-                'url'   => 'admin.logout'
+                'label'     => 'My Account',
+                'class'     => 'link',
+                'icon'      => 'user',
+                'url'       => 'usermanager.my_account',
+                'options'   => [
+                    'position'  => 'after:user-header-divider'
+                ]
             ]
         );
     }

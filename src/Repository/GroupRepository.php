@@ -9,14 +9,10 @@ class GroupRepository implements GroupRepositoryInterface
 {
 
     protected $groupProvider;
-    protected $datatable;
-    protected $userRepository;
 
-    public function __construct(ProviderInterface $groupProvider, UserRepositoryInterface $userRepository, DatatableResponseBuilder $datatable)
+    public function __construct(ProviderInterface $groupProvider)
     {
         $this->groupProvider    = $groupProvider;
-        $this->datatable        = $datatable;
-        $this->userRepository   = $userRepository;
     }
 
     public function findById($id)
@@ -69,34 +65,8 @@ class GroupRepository implements GroupRepositoryInterface
         return $this->groupProvider->findById($id)->delete();
     }
 
-    public function createDatatableResponse()
+    public function createDatatableQuery()
     {
-        $currentUser    = $this->userRepository->getCurrentUser();
-        $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.group.edit']) : false;
-        $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.group.delete']) : false;
-
-        return $this->datatable
-                    ->of($this->groupProvider->createModel())
-                    ->setColumn(['name', 'description', 'id'])
-                    ->setFormatter(
-                        function ($row) use ($hasEditAccess, $hasDeleteAccess) {
-                            $editButton     = $hasEditAccess
-                                            ? '<button href="'.
-                                                Url::to('usermanager.group.edit', ['id' => $row->id]).
-                                                '" class="btn btn-xs btn-primary btn-edit" style="margin-right: 5px">edit</button>'
-                                            : '';
-                            $deleteButton   = $hasDeleteAccess
-                                            ? '<button href="'.
-                                                Url::to('usermanager.group.delete', ['id' => $row->id]).
-                                                '" class="btn btn-xs btn-danger btn-delete" style="margin-right: 5px">delete</button>'
-                                            : '';
-                            return [
-                                $row->name,
-                                $row->description,
-                                $editButton.$deleteButton
-                            ];
-                        }
-                    )
-                    ->make();
+        return $this->groupProvider->createModel();
     }
 }

@@ -4,31 +4,30 @@ namespace Xsanisty\UserManager\Controller;
 
 use Exception;
 use Xsanisty\Admin\DashboardModule;
-use SilexStarter\Controller\DispatcherAwareController;
 use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
 use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 
-class PermissionController extends DispatcherAwareController
+class PermissionController
 {
-    protected $userRepo;
-    protected $permissionRepo;
+    protected $userRepository;
+    protected $permissionRepository;
 
-    public function __construct(PermissionRepositoryInterface $permissionRepo, UserRepositoryInterface $userRepo)
+    public function __construct(PermissionRepositoryInterface $permissionRepository, UserRepositoryInterface $userRepository)
     {
-        $this->userRepo = $userRepo;
-        $this->permissionRepo = $permissionRepo;
+        $this->userRepository       = $userRepository;
+        $this->permissionRepository = $permissionRepository;
     }
 
     public function index()
     {
-        $this->getDispatcher()->dispatch(DashboardModule::INIT);
+        Event::fire(DashboardModule::INIT);
         Menu::get('admin_sidebar')->setActive('user-manager.manage-permission');
 
         return Response::view(
             '@silexstarter-usermanager/permission/index',
             [
                 'title'     => 'Manage User Permissions',
-                'user'      => $this->userRepo->getCurrentUser(),
+                'user'      => $this->userRepository->getCurrentUser(),
                 'page_title'=> 'Manage User Permissions'
             ]
         );
@@ -36,13 +35,39 @@ class PermissionController extends DispatcherAwareController
 
     public function datatable()
     {
-        return Response::json($this->permissionRepo->createDatatableResponse());
+        $currentUser    = $this->userRepository->getCurrentUser();
+        $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.permission.edit']) : false;
+        $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.permission.delete']) : false;
+        $editTemplate   = '<button href="%s" class="btn btn-xs btn-primary btn-edit" style="margin-right: 5px">edit</button>';
+        $deleteTemplate = '<button href="%s" class="btn btn-xs btn-danger btn-delete" style="margin-right: 5px">delete</button>';
+
+        $datatable      = Datatable::of($this->permissionRepository->createDatatableQuery())
+                        ->setColumn(['name', 'category', 'description', 'id'])
+                        ->setFormatter(
+                            function ($row) use ($hasEditAccess, $hasDeleteAccess, $editTemplate, $deleteTemplate) {
+                                $editButton     = $hasEditAccess
+                                                ? sprintf($editTemplate, Url::to('usermanager.permission.edit', ['id' => $row->id]))
+                                                : '';
+                                $deleteButton   = $hasDeleteAccess
+                                                ? sprintf($deleteTemplate, Url::to('usermanager.permission.delete', ['id' => $row->id]))
+                                                : '';
+                                return [
+                                    $row->name,
+                                    $row->category,
+                                    $row->description,
+                                    $editButton.$deleteButton
+                                ];
+                            }
+                        )
+                        ->make();
+
+        return Response::json($datatable);
     }
 
     public function store()
     {
         try {
-            $this->permissionRepo->create(
+            $this->permissionRepository->create(
                 [
                     'name'          => Request::get('name'),
                     'category'      => Request::get('category'),
@@ -55,7 +80,6 @@ class PermissionController extends DispatcherAwareController
             return Response::ajax(
                 'Error occured while creating new permission',
                 500,
-                false,
                 [
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
@@ -68,14 +92,14 @@ class PermissionController extends DispatcherAwareController
     public function edit($id)
     {
         if (Request::ajax()) {
-            return Response::json($this->permissionRepo->findById($id));
+            return Response::json($this->permissionRepository->findById($id));
         }
     }
 
     public function update($id)
     {
         try {
-            $this->permissionRepo->update(
+            $this->permissionRepository->update(
                 Request::get('id'),
                 [
                     'name'          => Request::get('name'),
@@ -89,7 +113,6 @@ class PermissionController extends DispatcherAwareController
             return Response::ajax(
                 'Error occured while updating permission',
                 500,
-                false,
                 [
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
@@ -101,14 +124,13 @@ class PermissionController extends DispatcherAwareController
     public function delete($id)
     {
         try {
-            $this->permissionRepo->delete($id);
+            $this->permissionRepository->delete($id);
 
             return Response::ajax('Permission deleted');
         } catch (Exception $e) {
             return Response::ajax(
                 'Error occured while deleting permission',
                 500,
-                false,
                 [
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()

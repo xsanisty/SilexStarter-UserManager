@@ -10,13 +10,10 @@ class PermissionRepository implements PermissionRepositoryInterface
 {
     protected $permission;
     protected $datatable;
-    protected $userRepository;
 
-    public function __construct(Permission $permission, UserRepositoryInterface $userRepository, DatatableResponseBuilder $datatable)
+    public function __construct(Permission $permission)
     {
         $this->permission       = $permission;
-        $this->datatable        = $datatable;
-        $this->userRepository   = $userRepository;
     }
 
     public function groupByCategory()
@@ -54,35 +51,8 @@ class PermissionRepository implements PermissionRepositoryInterface
         return $this->permission->where('id', '=', $id)->update($data);
     }
 
-    public function createDatatableResponse()
+    public function createDatatableQuery()
     {
-        $currentUser    = $this->userRepository->getCurrentUser();
-        $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.permission.edit']) : false;
-        $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.permission.delete']) : false;
-
-        return $this->datatable
-                    ->of($this->permission)
-                    ->setColumn(['name', 'category', 'description', 'id'])
-                    ->setFormatter(
-                        function ($row) use ($hasEditAccess, $hasDeleteAccess) {
-                            $editButton     = $hasEditAccess
-                                            ? '<button href="'.
-                                                Url::to('usermanager.permission.edit', ['id' => $row->id]).
-                                                '" class="btn btn-xs btn-primary btn-edit" style="margin-right: 5px">edit</button>'
-                                            : '';
-                            $deleteButton   = $hasDeleteAccess
-                                            ? '<button href="'.
-                                                Url::to('usermanager.permission.delete', ['id' => $row->id]).
-                                                '" class="btn btn-xs btn-danger btn-delete" style="margin-right: 5px">delete</button>'
-                                            : '';
-                            return [
-                                $row->name,
-                                $row->category,
-                                $row->description,
-                                $editButton.$deleteButton
-                            ];
-                        }
-                    )
-                    ->make();
+        return $this->permission->newQuery();
     }
 }

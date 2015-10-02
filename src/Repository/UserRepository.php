@@ -10,13 +10,11 @@ use Xsanisty\Datatable\DatatableResponseBuilder;
 class UserRepository implements UserRepositoryInterface
 {
     protected $sentry;
-    protected $datatable;
     protected $userProvider;
 
-    public function __construct(Sentry $sentry, ProviderInterface $userProvider, DatatableResponseBuilder $datatable)
+    public function __construct(Sentry $sentry, ProviderInterface $userProvider)
     {
         $this->userProvider = $userProvider;
-        $this->datatable    = $datatable;
         $this->sentry       = $sentry;
     }
 
@@ -83,9 +81,7 @@ class UserRepository implements UserRepositoryInterface
         $user   = $this->sentry->findUserById($userId);
         $groups = isset($userData['groups']) ? $userData['groups'] : [];
 
-        if ($userData['password'] === $userData['confirm_password']) {
-            unset($userData['confirm_password']);
-        } else {
+        if ($userData['password'] !== $userData['confirm_password']) {
             throw new Exception("Password and confirmation password mismatch", 1);
         }
 
@@ -93,7 +89,7 @@ class UserRepository implements UserRepositoryInterface
             unset($userData['password']);
         }
 
-        unset($userData['groups']);
+        unset($userData['groups'], $userData['confirm_password']);
 
         foreach ($user->getGroups() as $group) {
             if (!in_array($group->id, $groups)) {
@@ -119,43 +115,10 @@ class UserRepository implements UserRepositoryInterface
         return $this->sentry->getUser();
     }
 
-    public function createDatatableResponse()
+    public function createDatatableQuery()
     {
         $currentUser    = $this->getCurrentUser();
-        $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.user.edit']) : false;
-        $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.user.delete']) : false;
 
-        return  $this
-                ->datatable
-                ->of(
-                    $this->userProvider
-                         ->createModel()
-                         ->where('id', '<>', $currentUser->id)
-                )
-                ->setColumn(['first_name', 'last_name', 'email', 'activated', 'last_login', 'id'])
-                ->setFormatter(
-                    function ($row) use ($hasEditAccess, $hasDeleteAccess) {
-                        $editButton     = $hasEditAccess
-                                        ? '<button href="'.
-                                            Url::to('usermanager.user.edit', ['id' => $row->id]).
-                                            '" class="btn btn-xs btn-primary btn-edit" style="margin-right: 5px">edit</button>'
-                                        : '';
-                        $deleteButton   = $hasDeleteAccess
-                                        ? '<button href="'.
-                                            Url::to('usermanager.user.delete', ['id' => $row->id]).
-                                            '" class="btn btn-xs btn-danger btn-delete" style="margin-right: 5px">delete</button>'
-                                        : '';
-
-                        return [
-                            $row->first_name,
-                            $row->last_name,
-                            $row->email,
-                            $row->activated == 1 ? '<span class="label label-success">active</span>' : '<span class="label label-danger">suspended</span>',
-                            $row->last_login ? $row->last_login->format('Y-m-d H:i') : '',
-                            $editButton.$deleteButton
-                        ];
-                    }
-                )
-                ->make();
+        return $this->userProvider->createModel()->where('id', '<>', $currentUser->id);
     }
 }

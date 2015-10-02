@@ -7,9 +7,8 @@ use Xsanisty\UserManager\Repository\GroupRepositoryInterface;
 use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
 use Xsanisty\Admin\DashboardModule;
-use SilexStarter\Controller\DispatcherAwareController;
 
-class UserController extends DispatcherAwareController
+class UserController
 {
     protected $userRepository;
     protected $groupRepository;
@@ -33,17 +32,18 @@ class UserController extends DispatcherAwareController
      */
     public function index()
     {
-        $this->getDispatcher()->dispatch(DashboardModule::INIT);
+        Event::fire(DashboardModule::INIT);
         Menu::get('admin_sidebar')->setActive('user-manager.manage-user');
 
         return Response::view(
             '@silexstarter-usermanager/user/index',
             [
-                'title'         => 'Manage Users',
-                'page_title'    => 'Manage Users',
-                'permissions'   => $this->permissionRepository->groupByCategory(),
-                'groups'        => $this->groupRepository->findAll(),
-                'user'          => $this->userRepository->getCurrentUser()
+                'title'             => 'Manage Users',
+                'page_title'        => 'Manage Users',
+                'permissions'       => $this->permissionRepository->groupByCategory(),
+                'groups'            => $this->groupRepository->findAll(),
+                'current_user'      => $this->userRepository->getCurrentUser(),
+                'user_form_template'=> Config::get('@silexstarter-usermanager.config.user_form_template')
             ]
         );
     }
@@ -54,16 +54,51 @@ class UserController extends DispatcherAwareController
      */
     public function datatable()
     {
-        return Response::json($this->userRepository->createDatatableResponse());
+        $currentUser    = $this->userRepository->getCurrentUser();
+        $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.user.edit']) : false;
+        $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.user.delete']) : false;
+        $editTemplate   = '<button href="%s" class="btn btn-xs btn-primary btn-edit" style="margin-right: 5px">edit</button>';
+        $deleteTemplate = '<button href="%s" class="btn btn-xs btn-danger btn-delete" style="margin-right: 5px">delete</button>';
+
+        $datatable      = Datatable::of($this->userRepository->createDatatableQuery())
+                        ->setColumn(['first_name', 'last_name', 'email', 'activated', 'last_login', 'id'])
+                        ->setFormatter(
+                            function ($row) use ($hasEditAccess, $hasDeleteAccess, $editTemplate, $deleteTemplate) {
+                                $editButton     = $hasEditAccess
+                                                ? sprintf($editTemplate, Url::to('usermanager.user.edit', ['id' => $row->id]))
+                                                : '';
+                                $deleteButton   = $hasDeleteAccess
+                                                ? sprintf($deleteTemplate, Url::to('usermanager.user.delete', ['id' => $row->id]))
+                                                : '';
+
+                                return [
+                                    $row->first_name,
+                                    $row->last_name,
+                                    $row->email,
+                                    $row->activated == 1 ? '<span class="label label-success">active</span>' : '<span class="label label-danger">suspended</span>',
+                                    $row->last_login ? $row->last_login->format('Y-m-d H:i') : '',
+                                    $editButton.$deleteButton
+                                ];
+                            }
+                        )
+                        ->make();
+
+        return Response::json($datatable);
     }
 
+    /**
+     * Display user create form for non ajax request.
+     *
+     * @return Response
+     */
     public function create()
     {
         return Response::view(
             '@silexstarter-usermanager/user/edit',
             [
-                'permissions' => $this->permissionRepository->findAll(),
-                'groups' => $this->groupRepository->findAll()
+                'permissions'       => $this->permissionRepository->findAll(),
+                'groups'            => $this->groupRepository->findAll(),
+                'user_form_template'=> Config::get('@silexstarter-usermanager.config.user_form_template')
             ]
         );
     }
@@ -76,8 +111,7 @@ class UserController extends DispatcherAwareController
     public function store()
     {
         try {
-            $user = Request::get();
-            unset($user['_method']);
+            $user = Request::except(['_method', 'id']);
 
             $this->userRepository->create($user);
 
@@ -86,7 +120,6 @@ class UserController extends DispatcherAwareController
             return Response::ajax(
                 'Error occured while creating user',
                 500,
-                false,
                 [
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
@@ -118,7 +151,8 @@ class UserController extends DispatcherAwareController
             [
                 'user' => $user,
                 'groups' => $this->groupRepository->findAll(),
-                'permissions' => $this->permissionRepository->findAll()
+                'permissions' => $this->permissionRepository->findAll(),
+                'user_form_template' => Config::get('@silexstarter-usermanager.config.user_form_template')
             ]
         );
     }
@@ -138,7 +172,6 @@ class UserController extends DispatcherAwareController
             return Response::ajax(
                 'Error occured while updating user',
                 500,
-                false,
                 [
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
@@ -157,7 +190,6 @@ class UserController extends DispatcherAwareController
             return Response::ajax(
                 'Error occured while deleting user',
                 500,
-                false,
                 [
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()

@@ -21,5 +21,5 @@ interface GroupRepositoryInterface
 
     public function delete($id);
 
-    public function createDatatableResponse();
+    public function createDatatableQuery();
 }

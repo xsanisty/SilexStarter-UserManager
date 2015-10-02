@@ -25,5 +25,5 @@ interface UserRepositoryInterface
 
     public function getCurrentUser();
 
-    public function createDatatableResponse();
+    public function createDatatableQuery();
 }

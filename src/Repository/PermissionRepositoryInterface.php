@@ -23,5 +23,5 @@ interface PermissionRepositoryInterface
 
     public function update($id, array $data);
 
-    public function createDatatableResponse();
+    public function createDatatableQuery();
 }

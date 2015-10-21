@@ -52,7 +52,6 @@ class UserManagerModule implements ModuleProviderInterface
                 'assets'        => 'Resources/assets',
                 'controllers'   => 'Controller',
                 'commands'      => 'Command',
-                'migrations'    => 'Migration'
             ]
         );
     }
@@ -96,10 +95,8 @@ class UserManagerModule implements ModuleProviderInterface
         $menu->addChildren(
             'user-header-divider',
             [
-                'class' => 'divider',
-                'options'   => [
-                    'position' => 'after:user-header'
-                ]
+                'meta'      => ['type' => 'divider'],
+                'options'   => ['position' => 'after:user-header']
             ]
         );
 
@@ -107,12 +104,10 @@ class UserManagerModule implements ModuleProviderInterface
             'my-account',
             [
                 'label'     => 'My Account',
-                'class'     => 'link',
                 'icon'      => 'user',
-                'url'       => 'usermanager.my_account',
-                'options'   => [
-                    'position'  => 'after:user-header-divider'
-                ]
+                'url'       => Url::to('usermanager.my_account'),
+                'meta'      => ['type' => 'link'],
+                'options'   => ['position' => 'after:user-header-divider']
             ]
         );
     }

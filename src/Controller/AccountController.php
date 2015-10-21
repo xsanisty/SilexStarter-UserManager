@@ -18,6 +18,11 @@ class AccountController extends DispatcherAwareController
         $this->userRepository = $userRepository;
     }
 
+    /**
+     * Display current user account information form.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function myAccount()
     {
         $this->getDispatcher()->dispatch(DashboardModule::INIT);
@@ -37,6 +42,11 @@ class AccountController extends DispatcherAwareController
         );
     }
 
+    /**
+     * Perform update information on current user based on submitted form.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function updateAccount()
     {
         try {

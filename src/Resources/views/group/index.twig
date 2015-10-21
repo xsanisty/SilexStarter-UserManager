@@ -57,7 +57,7 @@
         '@silexstarter-usermanager/js/datatable.js'
     ]) }}
 
-    {% if user.hasAnyAccess(['admin', 'usermanager.group.create']) %}
+    {% if current_user.hasAnyAccess(['admin', 'usermanager.group.create']) %}
         {{ javascript('@silexstarter-usermanager/js/create.js') }}
     {% endif %}
 {% endblock %}

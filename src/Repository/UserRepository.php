@@ -18,31 +18,70 @@ class UserRepository implements UserRepositoryInterface
         $this->sentry       = $sentry;
     }
 
+    /**
+     * Get all available user.
+     *
+     */
     public function findAll()
     {
         return $this->userProvider->findAll();
     }
 
+    /**
+     * Get user by specified id.
+     *
+     * @param  int  $id     The user id
+     *
+     * @return User
+     */
     public function findById($id)
     {
         return $this->userProvider->findById($id);
     }
 
+    /**
+     * Get user by user login.
+     *
+     * @param  string $login The user login (default is email address)
+     *
+     * @return User
+     */
     public function findByLogin($login)
     {
         return $this->userProvider->findByLogin($login);
     }
 
+    /**
+     * Get user by matching credential (login and password).
+     *
+     * @param  array  $credential     Pair of login and password
+     *
+     * @return User
+     */
     public function findByCredential(array $credential)
     {
         return $this->userProvider->findByCredential($credential);
     }
 
+    /**
+     * Delete user by id.
+     *
+     * @param  int  $id     The user id
+     *
+     * @return boolean
+     */
     public function delete($id)
     {
         return  $this->findById($id)->delete();
     }
 
+    /**
+     * Create new user instance in the database.
+     *
+     * @param  array  $userData     User data information.
+     *
+     * @return User
+     */
     public function create(array $userData)
     {
         $groups = [];
@@ -74,8 +113,18 @@ class UserRepository implements UserRepositoryInterface
 
             $user->addGroup($group);
         }
+
+        return $user;
     }
 
+    /**
+     * Update user information.
+     *
+     * @param  int      $userId   The user id
+     * @param  array    $userData The user data
+     *
+     * @return User
+     */
     public function update($userId, array $userData)
     {
         $user   = $this->sentry->findUserById($userId);
@@ -108,13 +157,24 @@ class UserRepository implements UserRepositoryInterface
 
             $user->addGroup($group);
         }
+
+        return $user;
     }
 
+    /**
+     * Get current logged in user.
+     *
+     * @return User|null
+     */
     public function getCurrentUser()
     {
         return $this->sentry->getUser();
     }
 
+    /**
+     * Create new query for datatable processing.
+     *
+     */
     public function createDatatableQuery()
     {
         $currentUser    = $this->getCurrentUser();

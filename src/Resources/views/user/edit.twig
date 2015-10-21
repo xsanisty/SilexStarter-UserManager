@@ -1,12 +1,6 @@
 {% set template = config.get('@silexstarter-dashboard.config.template') %}
 {% extends '@silexstarter-dashboard/'~ template ~'/index.twig' %}
 
-{% block stylesheet %}
-    {{parent()}}
-
-    {{ stylesheet('@silexstarter-datatable/css/dataTables.bootstrap.css') }}
-{% endblock %}
-
 {% block content %}
     <div class="row">
         <div class="col-md-12">
@@ -17,7 +11,7 @@
                 </div>
                 <div class="widget-body flow">
                     <div class="row col-md-8">
-                        {% include '@silexstarter-usermanager/user/form.twig' %}
+                        {% include user_form_template %}
                     </div>
                 </div>
             </div>

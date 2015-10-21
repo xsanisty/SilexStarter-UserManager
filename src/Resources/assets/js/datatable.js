@@ -22,7 +22,7 @@ $(document).ready(function(){
             "url": datatableUrl,
             "type": "POST",
             "error": function(resp){
-                if(resp.responseJSON.error.code == 401){
+                if(resp.status == 401){
                     alert('Your session is expired!\n\nYou will be redirected to the login page shortly.');
                     window.location.reload();
                 }
@@ -74,6 +74,8 @@ $(document).ready(function(){
                             elem.val(groups);
                         }
 
+                    } else if('profile_pic' == a){
+                        $('#profile-pic-preview').attr('src', fields[a] ? global.base_url+ 'assets/img/profile/' + fields[a] : '');
                     } else {
                         elem.val(fields[a]);
                     }
@@ -124,19 +126,45 @@ $(document).ready(function(){
         }
     });
 
+    $('#profile-pic-container').click(function(e){
+        $('#profile_pic').click();
+    });
+
+    $('#profile_pic').change(function(){
+        var reader  = new FileReader();
+        var preview = $('#profile-pic-preview');
+        var file    = this.files[0];
+
+        reader.onloadend = function () {
+            preview.attr('src', reader.result);
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.attr('src', '');
+        }
+    });
+
     $('#btn-save').click(function(e) {
         e.preventDefault();
 
         var btn = $(this);
+        var formData = new FormData($(formId)[0]);
 
         btn.prop('disabled', true).text('Saving...');
+        console.log(formData);
 
         $.ajax({
-            'method' : $('#_method').val(),
+            'method' : 'POST',
             'data' : $(formId).serialize(),
             'url' : $('#_method').val() == 'PUT' ? $(formId).attr('action') + $('#id').val() : $(formId).attr('action'),
+            'data' : formData,
+            'cache' : false,
+            'contentType' : false,
+            'processData' : false,
             'success' : function(resp){
-                alert(resp.data);
+                alert(resp.content);
 
                 btn.prop('disabled', false).text('Save');
 
@@ -150,7 +178,7 @@ $(document).ready(function(){
                     alert('Your session is expired!\n\nYou will be redirected to the login page shortly.');
                     window.location.reload();
                 } else {
-                    alert(resp.responseJSON.errors.message);
+                    alert(resp.responseJSON.content + '\n\nDetailed error:\n' + resp.responseJSON.errors[0].message);
                 }
             }
         });

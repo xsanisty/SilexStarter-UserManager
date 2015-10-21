@@ -111,19 +111,29 @@ class UserController
     public function store()
     {
         try {
-            $user = Request::except(['_method', 'id']);
+            $data       = Request::except(['_method', 'id']);
+            $picture    = Request::file('profile_pic');
 
-            $this->userRepository->create($user);
+            if ($picture && $picture->isValid()) {
+                $newName    = md5(microtime()) . '.' . $picture->guessClientExtension();
+                $targetDir  = Config::get('app')['path.public'] . 'assets/img/profile/';
 
-            return Response::ajax('User has been created');
+                $picture->move($targetDir, $newName);
+
+                $data['profile_pic'] = $newName;
+            }
+
+            $this->userRepository->create($data);
+
+            return Response::ajax('User has been created', 201);
         } catch (Exception $e) {
             return Response::ajax(
                 'Error occured while creating user',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }
@@ -160,12 +170,24 @@ class UserController
     public function update($id)
     {
         try {
-            $userData = Request::get();
+            $data   = Request::except(['_method', 'id']);
+            $picture= Request::file('profile_pic');
+            $user   = $this->userRepository->findById($id);
 
-            unset($userData['_method']);
-            unset($userData['id']);
+            if ($picture && $picture->isValid()) {
+                $newName    = md5(microtime()) . '.' . $picture->guessClientExtension();
+                $targetDir  = Config::get('app')['path.public'] . 'assets/img/profile/';
 
-            $this->userRepository->update($id, $userData);
+                $picture->move($targetDir, $newName);
+
+                $data['profile_pic'] = $newName;
+
+                if ($user->profile_pic) {
+                    File::remove($targetDir . $user->profile_pic);
+                }
+            }
+
+            $this->userRepository->update($id, $data);
 
             return Response::ajax('User has been updated');
         } catch (Exception $e) {
@@ -183,6 +205,13 @@ class UserController
     public function delete($id)
     {
         try {
+            $user    = $this->userRepository->findById($id);
+
+            if ($user->profile_pic) {
+                $targetDir  = Config::get('app')['path.public'] . 'assets/img/profile/';
+                File::remove($targetDir . $user->profile_pic);
+            }
+
             $success = $this->userRepository->delete($id);
 
             return Response::ajax('User has been deleted');
@@ -196,5 +225,13 @@ class UserController
                 ]
             );
         }
+    }
+
+    public function profilePicture($id)
+    {
+        $user = $this->userRepository->findById($id);
+        $dir  = Config::get('app')['path.public'] . 'assets/img/profile/';
+
+        return Response::file($dir . $user->profile_pic);
     }
 }

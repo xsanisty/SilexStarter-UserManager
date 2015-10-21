@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ikhsan
- * Date: 18/08/15
- * Time: 7:59
- */
+
 namespace Xsanisty\UserManager\Repository;
 
 interface PermissionRepositoryInterface

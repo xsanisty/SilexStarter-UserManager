@@ -80,7 +80,7 @@ class GroupController
 
             $this->groupRepository->create($group);
 
-            return Response::ajax('Group has been created');
+            return Response::ajax('Group has been created', 201);
         } catch (Exception $e) {
             return Response::ajax(
                 'Error occured while creating group',

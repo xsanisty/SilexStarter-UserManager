@@ -75,7 +75,7 @@ class PermissionController
                 ]
             );
 
-            return Response::ajax('New permission has been created');
+            return Response::ajax('New permission has been created', 201);
         } catch (Exception $e) {
             return Response::ajax(
                 'Error occured while creating new permission',

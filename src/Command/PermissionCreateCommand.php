@@ -20,10 +20,9 @@ class PermissionCreateCommand extends Command
                 InputArgument::REQUIRED,
                 'The permission name'
             )
-            ->addOption(
+            ->addArgument(
                 'description',
-                'd',
-                InputOption::VALUE_REQUIRED,
+                InputArgument::REQUIRED,
                 'The permission description'
             )
             ->addOption(
@@ -38,7 +37,7 @@ class PermissionCreateCommand extends Command
     {
         $app    = $this->getSilexStarter();
         $name   = $input->getArgument('permission-name');
-        $desc   = $input->getOption('description');
+        $desc   = $input->getArgument('description');
         $cat    = $input->getOption('category');
 
         $app['Xsanisty\UserManager\Repository\PermissionRepository']->create(

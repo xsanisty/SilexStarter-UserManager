@@ -13,11 +13,22 @@ class GroupRemoveCommand extends Command
     {
         $this
             ->setName('group:remove')
-            ->setDescription('Remove group from database');
+            ->setDescription('Remove group from database')
+            ->addArgument(
+                'group-name',
+                InputArgument::REQUIRED,
+                'The group name'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $app        = $this->getSilexStarter();
+        $groupName  = $input->getArgument('group-name');
+        $group      = $app['Xsanisty\UserManager\Repository\GroupRepository']->findByName($groupName);
 
+        $app['Xsanisty\UserManager\Repository\GroupRepository']->delete($group->id);
+
+        $output->writeln('<info>Group "'.$group->name.'" is now removed</info>');
     }
 }

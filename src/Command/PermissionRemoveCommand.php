@@ -13,11 +13,22 @@ class PermissionRemoveCommand extends Command
     {
         $this
             ->setName('permission:remove')
-            ->setDescription('Remove permission from database');
+            ->setDescription('Remove permission from database')
+            ->addArgument(
+                'permission-name',
+                InputArgument::REQUIRED,
+                'The permission name'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $app        = $this->getSilexStarter();
+        $permName   = $input->getArgument('permission-name');
+        $perm       = $app['Xsanisty\UserManager\Repository\PermissionRepository']->findByName($permName);
 
+        $app['Xsanisty\UserManager\Repository\PermissionRepository']->delete($perm->id);
+
+        $output->writeln('<info>Permission "'.$perm->name.'" is now removed</info>');
     }
 }

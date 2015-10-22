@@ -13,7 +13,7 @@ class UserListCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('user')
+            ->setName('user:all')
             ->setDescription('Display all registered users');
     }
 
@@ -32,10 +32,14 @@ class UserListCommand extends Command
             ];
         }
 
-        $table->setHeaders(['ID', 'First Name', 'Last Name', 'Email']);
-        $table->setRows($rows);
+        if (!$rows) {
+            $output->writeln('<info>No user registered</info>');
+        } else {
 
-        $table->render();
+            $table->setHeaders(['ID', 'First Name', 'Last Name', 'Email']);
+            $table->setRows($rows);
 
+            $table->render();
+        }
     }
 }

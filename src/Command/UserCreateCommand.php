@@ -13,13 +13,13 @@ use RecursiveDirectoryIterator;
 use FilesystemIterator;
 use Exception;
 
-class UserAddCommand extends Command
+class UserCreateCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('user:add')
-            ->setDescription('Add new user into database');
+            ->setName('user:create')
+            ->setDescription('Create new user in database');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

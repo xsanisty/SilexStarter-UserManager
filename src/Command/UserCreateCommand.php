@@ -50,8 +50,8 @@ class UserCreateCommand extends Command
         $user = [
             'email' => $email,
             'password' => $passwd,
-            'first_name' => $fName,
-            'last_name' => $lName,
+            'first_name' => (string) $fName,
+            'last_name' => (string) $lName,
             'activated' => 1
         ];
 

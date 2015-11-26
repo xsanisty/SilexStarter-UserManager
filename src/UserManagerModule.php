@@ -133,7 +133,7 @@ class UserManagerModule implements ModuleProviderInterface
                 'icon'          => 'user',
                 'label'         => 'Users',
                 'title'         => 'Manage Users',
-                'url'           => 'usermanager.user.index',
+                'url'           => Url::to('usermanager.user.index'),
                 'permission'    => ['usermanager.user.read']
             ]
         );
@@ -144,7 +144,7 @@ class UserManagerModule implements ModuleProviderInterface
                 'icon'          => 'users',
                 'label'         => 'Groups',
                 'title'         => 'Manage Groups',
-                'url'           => 'usermanager.group.index',
+                'url'           => Url::to('usermanager.group.index'),
                 'permission'    => ['usermanager.group.read']
             ]
         );
@@ -155,7 +155,7 @@ class UserManagerModule implements ModuleProviderInterface
                 'icon'          => 'th-list',
                 'label'         => 'Permissions',
                 'title'         => 'Manage Permissions',
-                'url'           => 'usermanager.permission.index',
+                'url'           => Url::to('usermanager.permission.index'),
                 'permission'    => ['usermanager.permission.read']
             ]
         );

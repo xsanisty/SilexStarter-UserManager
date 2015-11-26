@@ -32,30 +32,15 @@ class GroupRepository implements GroupRepositoryInterface
 
     public function create(array $groupData)
     {
-        if (isset($groupData['permissions'])) {
-            $permissions = $groupData['permissions'];
-            $groupData['permissions'] = [];
-
-            foreach ($permissions as $perm) {
-                $groupData['permissions'][$perm] = 1;
-            }
-        }
+        $groupData = $this->prepareData($groupData);
 
         return $this->groupProvider->create($groupData);
     }
 
     public function update($id, $groupData)
     {
-        $group = $this->findById($id);
-
-        if (isset($groupData['permissions'])) {
-            $permissions = $groupData['permissions'];
-            $groupData['permissions'] = [];
-
-            foreach ($permissions as $perm) {
-                $groupData['permissions'][$perm] = 1;
-            }
-        }
+        $group      = $this->findById($id);
+        $groupData  = $this->prepareData($groupData);
 
         return $group->update($groupData);
     }
@@ -68,5 +53,19 @@ class GroupRepository implements GroupRepositoryInterface
     public function createDatatableQuery()
     {
         return $this->groupProvider->createModel();
+    }
+
+    protected function prepareData(array $data)
+    {
+        if (isset($data['permissions'])) {
+            $permissions = $data['permissions'];
+            $data['permissions'] = [];
+
+            foreach ($permissions as $perm) {
+                $data['permissions'][$perm] = 1;
+            }
+        }
+
+        return $data;
     }
 }

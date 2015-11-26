@@ -1,9 +1,12 @@
 $(document).ready(function(){
+    var domSetting  = global.admin_template == 'RDash'
+                    ? "<'row'<'col-md-12'<'widget'<'widget-title'<'row'<'col-md-5'<'#icon-wrapper'>><'col-md-3'l><'col-md-4'f>><'clearfix'>><'widget-body flow no-padding'tr><'widget-title'<'col-sm-5'i><'col-sm-7'p><'clearfix'>>>>"
+                    : "<'row'<'col-md-12'<'box box-primary'<'box-header'<'row'<'col-md-6'<'#icon-wrapper'>><'col-md-3'l><'col-md-3'f>><> <'box-body no-padding'tr><'box-footer clearfix'<'col-sm-5'i><'col-sm-7'p>>>>>";
     var $datatable = $(datatableId).DataTable({
         "processing": true,
         "serverSide": true,
         "responsive": true,
-        "dom" : "<'row'<'col-md-12'<'widget'<'widget-title'<'row'<'col-md-5'<'#icon-wrapper'>><'col-md-3'l><'col-md-4'f>><'clearfix'>><'widget-body flow no-padding'tr><'widget-title'<'col-sm-5'i><'col-sm-7'p><'clearfix'>>>>",
+        "dom" : domSetting,
         "columnDefs": [
             {
                 "targets": -1,
@@ -153,7 +156,6 @@ $(document).ready(function(){
         var formData = new FormData($(formId)[0]);
 
         btn.prop('disabled', true).text('Saving...');
-        console.log(formData);
 
         $.ajax({
             'method' : 'POST',

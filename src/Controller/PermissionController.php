@@ -27,7 +27,6 @@ class PermissionController
             '@silexstarter-usermanager/permission/index',
             [
                 'title'     => 'Manage User Permissions',
-                'user'      => $this->userRepository->getCurrentUser(),
                 'page_title'=> 'Manage User Permissions'
             ]
         );
@@ -80,10 +79,10 @@ class PermissionController
             return Response::ajax(
                 'Error occured while creating new permission',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
 
@@ -113,10 +112,10 @@ class PermissionController
             return Response::ajax(
                 'Error occured while updating permission',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }
@@ -131,10 +130,10 @@ class PermissionController
             return Response::ajax(
                 'Error occured while deleting permission',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }

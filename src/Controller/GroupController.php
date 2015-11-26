@@ -34,7 +34,6 @@ class GroupController
             [
                 'title'         => 'Manage Groups',
                 'page_title'    => 'Manage Groups',
-                'current_user'  => $this->userRepository->getCurrentUser(),
                 'permissions'   => $this->permissionRepository->groupByCategory()
             ]
         );
@@ -73,10 +72,7 @@ class GroupController
     public function store()
     {
         try {
-            $group = Request::get();
-
-            unset($group['_method']);
-            unset($group['id']);
+            $group = Request::only(['name', 'description', 'permissions']);
 
             $this->groupRepository->create($group);
 
@@ -85,10 +81,10 @@ class GroupController
             return Response::ajax(
                 'Error occured while creating group',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }
@@ -103,10 +99,7 @@ class GroupController
     public function update($id)
     {
         try {
-            $group = Request::get();
-
-            unset($group['_method']);
-            unset($group['id']);
+            $group = Request::only(['name', 'description', 'permissions']);
 
             $this->groupRepository->update($id, $group);
 
@@ -115,10 +108,10 @@ class GroupController
             return Response::ajax(
                 'Error occured while updating group',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }
@@ -134,10 +127,10 @@ class GroupController
             return Response::ajax(
                 'Error occured while deleting group',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }

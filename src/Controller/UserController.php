@@ -42,7 +42,6 @@ class UserController
                 'page_title'        => 'Manage Users',
                 'permissions'       => $this->permissionRepository->groupByCategory(),
                 'groups'            => $this->groupRepository->findAll(),
-                'current_user'      => $this->userRepository->getCurrentUser(),
                 'user_form_template'=> Config::get('@silexstarter-usermanager.config.user_form_template')
             ]
         );
@@ -194,10 +193,10 @@ class UserController
             return Response::ajax(
                 'Error occured while updating user',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }
@@ -219,10 +218,10 @@ class UserController
             return Response::ajax(
                 'Error occured while deleting user',
                 500,
-                [
+                [[
                     'message'   => $e->getMessage(),
                     'code'      => $e->getCode()
-                ]
+                ]]
             );
         }
     }

@@ -150,6 +150,15 @@ class UserRepository implements UserRepositoryInterface
             }
         }
 
+        if (isset($userData['permissions'])) {
+            $permissions = $userData['permissions'];
+            $userData['permissions'] = [];
+
+            foreach ($permissions as $perm) {
+                $userData['permissions'][$perm] = 1;
+            }
+        }
+
         $user->update($userData);
 
         foreach ($groups as $groupId) {

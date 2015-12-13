@@ -15,11 +15,25 @@ class UserManagerModule implements ModuleProviderInterface
 {
     protected $app;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(Application $app)
     {
         $this->app = $app;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredModules()
+    {
+        return ['silexstarter-dashboard', 'silexstarter-datatable'];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getInfo()
     {
         return new ModuleInfo(
@@ -28,20 +42,22 @@ class UserManagerModule implements ModuleProviderInterface
                 'author_name'   => 'Xsanisty Development Team',
                 'author_email'  => 'developers@xsanisty.com',
                 'repository'    => 'https://github.com/xsanisty/SilexStarter-UserManager',
+                'description'   => 'Provide functionality to manage user, group/role, and permission'
             ]
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getModuleIdentifier()
     {
         return 'silexstarter-usermanager';
     }
 
-    public function getRequiredModules()
-    {
-        return ['silexstarter-dashboard', 'silexstarter-datatable'];
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getResources()
     {
         return new ModuleResource(
@@ -56,6 +72,46 @@ class UserManagerModule implements ModuleProviderInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getRequiredPermissions()
+    {
+        return [
+            'usermanager.user.read'         => 'Read user list in the database',
+            'usermanager.user.create'       => 'Create new user in the database',
+            'usermanager.user.edit'         => 'Edit information of existing user',
+            'usermanager.user.delete'       => 'Remove user from the database',
+            'usermanager.group.read'        => 'Read user group list in the database',
+            'usermanager.group.create'      => 'Create new group in the database',
+            'usermanager.group.edit'        => 'Edit information of existing group',
+            'usermanager.group.delete'      => 'Remove group from the database',
+            'usermanager.permission.read'   => 'Read permission list in the database',
+            'usermanager.permission.create' => 'Create new permission in the database',
+            'usermanager.permission.edit'   => 'Edit existing permission',
+            'usermanager.permission.delete' => 'Remove permission from the database',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function install()
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function uninstall()
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function register()
     {
         $this->app->registerServices(
@@ -74,6 +130,9 @@ class UserManagerModule implements ModuleProviderInterface
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function boot()
     {
     }
@@ -88,20 +147,10 @@ class UserManagerModule implements ModuleProviderInterface
         $name   = $user ? $user->first_name.' '.$user->last_name : '';
         $email  = $user ? $user->email : '';
         $name   = trim($name) ? $name : $email;
-
-
-        $menu = $this->app['menu_manager']->get('admin_navbar')->getItem('user');
+        $menu   = $this->app['menu_manager']->get('admin_navbar')->getItem('user');
 
         $menu->addChildren(
-            'user-header-divider',
-            [
-                'meta'      => ['type' => 'divider'],
-                'options'   => ['position' => 'after:user-header']
-            ]
-        );
-
-        $menu->addChildren(
-            'my-account',
+            'user-account',
             [
                 'label'     => 'My Account',
                 'icon'      => 'user',

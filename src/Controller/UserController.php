@@ -34,12 +34,21 @@ class UserController
     {
         Event::fire(DashboardModule::INIT);
         Menu::get('admin_sidebar')->setActive('user-manager.manage-user');
+        Menu::get('admin_breadcrumb')->createItem(
+            'manage-user',
+            [
+                'label' => 'Manage Users',
+                'icon'  => 'user',
+                'url'   => Url::to('usermanager.user.index')
+            ]
+        );
 
         return Response::view(
             '@silexstarter-usermanager/user/index',
             [
                 'title'             => 'Manage Users',
                 'page_title'        => 'Manage Users',
+                'page_description'  => 'modify user\'s data, group, permission, etc',
                 'permissions'       => $this->permissionRepository->groupByCategory(),
                 'groups'            => $this->groupRepository->findAll(),
                 'user_form_template'=> Config::get('@silexstarter-usermanager.config.user_form_template')
@@ -60,7 +69,7 @@ class UserController
         $deleteTemplate = '<button href="%s" class="btn btn-xs btn-danger btn-delete" style="margin-right: 5px">delete</button>';
 
         $datatable      = Datatable::of($this->userRepository->createDatatableQuery())
-                        ->setColumn(['first_name', 'last_name', 'email', 'activated', 'last_login', 'id'])
+                        ->setColumn(['profile_pic', 'first_name', 'last_name', 'email', 'activated', 'last_login', 'id'])
                         ->setFormatter(
                             function ($row) use ($hasEditAccess, $hasDeleteAccess, $editTemplate, $deleteTemplate) {
                                 $editButton     = $hasEditAccess
@@ -70,12 +79,17 @@ class UserController
                                                 ? sprintf($deleteTemplate, Url::to('usermanager.user.delete', ['id' => $row->id]))
                                                 : '';
 
+                                $profilePic     = !$row->profile_pic
+                                                ? '<img src="'. Asset::resolvePath('@silexstarter-dashboard/img/avatar.jpg') .'" class="img-circle img-sm" />'
+                                                : '<img src="'. Asset::resolvePath('img/profile/' . $row->profile_pic) .'" class="img-circle img-sm" />';
+
                                 return [
+                                    $profilePic,
                                     $row->first_name,
                                     $row->last_name,
                                     $row->email,
                                     $row->activated == 1 ? '<span class="label label-success">active</span>' : '<span class="label label-danger">suspended</span>',
-                                    $row->last_login ? $row->last_login->format('Y-m-d H:i') : '',
+                                    $row->last_login ? $row->last_login->format('Y-m-d') : '',
                                     $editButton.$deleteButton
                                 ];
                             }

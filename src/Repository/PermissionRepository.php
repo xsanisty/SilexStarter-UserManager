@@ -13,7 +13,7 @@ class PermissionRepository implements PermissionRepositoryInterface
 
     public function __construct(Permission $permission)
     {
-        $this->permission       = $permission;
+        $this->permission = $permission;
     }
 
     public function groupByCategory()

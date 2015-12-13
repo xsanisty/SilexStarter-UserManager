@@ -4,23 +4,23 @@ namespace Xsanisty\UserManager\Controller;
 
 use Exception;
 use Xsanisty\Admin\DashboardModule;
+use Cartalyst\Sentry\Users\UserInterface;
 use Xsanisty\UserManager\Repository\GroupRepositoryInterface;
 use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
-use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 
 class GroupController
 {
     protected $groupRepository;
-    protected $userRepository;
+    protected $user;
     protected $permissionRepository;
 
     public function __construct(
         GroupRepositoryInterface $groupRepository,
-        UserRepositoryInterface $userRepository,
+        UserInterface $user,
         PermissionRepositoryInterface $permissionRepository
     ) {
         $this->groupRepository      = $groupRepository;
-        $this->userRepository       = $userRepository;
+        $this->user                 = $user;
         $this->permissionRepository = $permissionRepository;
     }
 
@@ -28,6 +28,14 @@ class GroupController
     {
         Event::fire(DashboardModule::INIT);
         Menu::get('admin_sidebar')->setActive('user-manager.manage-group');
+        Menu::get('admin_breadcrumb')->createItem(
+            'manage-group',
+            [
+                'label' => 'Manage Groups',
+                'icon'  => 'users',
+                'url'   => Url::to('usermanager.group.index')
+            ]
+        );
 
         return View::make(
             '@silexstarter-usermanager/group/index',
@@ -41,7 +49,7 @@ class GroupController
 
     public function datatable()
     {
-        $currentUser    = $this->userRepository->getCurrentUser();
+        $currentUser    = $this->user;
         $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.group.edit']) : false;
         $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.group.delete']) : false;
         $editTemplate   = '<button href="%s" class="btn btn-xs btn-primary btn-edit" style="margin-right: 5px">edit</button>';

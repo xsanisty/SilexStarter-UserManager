@@ -4,17 +4,17 @@ namespace Xsanisty\UserManager\Controller;
 
 use Exception;
 use Xsanisty\Admin\DashboardModule;
+use Cartalyst\Sentry\Users\UserInterface;
 use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
-use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 
 class PermissionController
 {
-    protected $userRepository;
+    protected $user;
     protected $permissionRepository;
 
-    public function __construct(PermissionRepositoryInterface $permissionRepository, UserRepositoryInterface $userRepository)
+    public function __construct(PermissionRepositoryInterface $permissionRepository, UserInterface $user)
     {
-        $this->userRepository       = $userRepository;
+        $this->user = $user;
         $this->permissionRepository = $permissionRepository;
     }
 
@@ -22,6 +22,15 @@ class PermissionController
     {
         Event::fire(DashboardModule::INIT);
         Menu::get('admin_sidebar')->setActive('user-manager.manage-permission');
+
+        Menu::get('admin_breadcrumb')->createItem(
+            'manage-permission',
+            [
+                'label' => 'Manage Permissions',
+                'icon'  => 'th-list',
+                'url'   => Url::to('usermanager.permission.index')
+            ]
+        );
 
         return Response::view(
             '@silexstarter-usermanager/permission/index',
@@ -34,7 +43,7 @@ class PermissionController
 
     public function datatable()
     {
-        $currentUser    = $this->userRepository->getCurrentUser();
+        $currentUser    = $this->user;
         $hasEditAccess  = $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.permission.edit']) : false;
         $hasDeleteAccess= $currentUser ? $currentUser->hasAnyAccess(['admin', 'usermanager.permission.delete']) : false;
         $editTemplate   = '<button href="%s" class="btn btn-xs btn-primary btn-edit" style="margin-right: 5px">edit</button>';

@@ -5,17 +5,16 @@ namespace Xsanisty\UserManager\Controller;
 use Exception;
 use InvalidArgumentException;
 use Xsanisty\Admin\DashboardModule;
-use Xsanisty\UserManager\Repository\UserRepository;
+use Cartalyst\Sentry\Users\UserInterface;
 use SilexStarter\Controller\DispatcherAwareController;
-use Xsanisty\UserManager\Repository\UserRepositoryInterface;
 
-class AccountController extends DispatcherAwareController
+class AccountController
 {
-    protected $userRepository;
+    protected $user;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserInterface $user)
     {
-        $this->userRepository = $userRepository;
+        $this->user = $user;
     }
 
     /**
@@ -25,19 +24,27 @@ class AccountController extends DispatcherAwareController
      */
     public function myAccount()
     {
-        $this->getDispatcher()->dispatch(DashboardModule::INIT);
-        $user = $this->userRepository->getCurrentUser();
+        Event::fire(DashboardModule::INIT);
+
+        Menu::get('admin_breadcrumb')->createItem(
+            'my-account',
+            [
+                'label' => 'My Account',
+                'icon'  => 'user',
+                'url'   => Url::to('usermanager.my_account')
+            ]
+        );
 
         return Response::view(
             '@silexstarter-usermanager/account/my_account',
             [
-                'userdata' => $user,
-                'groups' => $user->getGroups(),
-                'permissions' => $user->getMergedPermissions(),
-                'title' => 'My Account',
-                'page_title' => 'My Account',
-                'success' => Session::getFlash('success'),
-                'error' => Session::getFlash('error')
+                'userdata'      => $this->user,
+                'groups'        => $this->user->getGroups(),
+                'permissions'   => $this->user->getMergedPermissions(),
+                'title'         => 'My Account',
+                'page_title'    => 'My Account',
+                'success'       => Session::getFlash('success'),
+                'error'         => Session::getFlash('error')
             ]
         );
     }
@@ -50,7 +57,6 @@ class AccountController extends DispatcherAwareController
     public function updateAccount()
     {
         try {
-            $user       = $this->userRepository->getCurrentUser();
             $password   = Request::get('password');
 
             if ($password && $password != Request::get('confirm_password')) {
@@ -58,13 +64,13 @@ class AccountController extends DispatcherAwareController
             }
 
             if (trim($password)) {
-                $user->password = $password;
+                $this->user->password = $password;
             }
 
-            $user->first_name   = Request::get('first_name');
-            $user->last_name    = Request::get('last_name');
+            $this->user->first_name   = Request::get('first_name');
+            $this->user->last_name    = Request::get('last_name');
 
-            $user->save();
+            $this->user->save();
 
             Session::flash('success', 'Your information is updated!');
 

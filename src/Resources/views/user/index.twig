@@ -11,25 +11,22 @@
     ]) }}
 {% endblock %}
 
-{% block breadcrumb %}
-    <a href="{{url_for('admin.home')}}">Home</a> / <a href="#">Users</a>
-{% endblock %}
-
 {% block content %}
     <table class="table table-condensed table-striped" id="user_table" style="width: 100%; max-width: 1200px">
         <thead>
             <tr>
+                <th class="all" style="width: 5%"></th>
                 <th class="all" style="width: 20%">First Name</th>
                 <th class="all" style="width: 20%">Last Name</th>
-                <th class="desktop" style="width: 20%">Email</th>
+                <th class="desktop" style="width: 15%">Email</th>
                 <th class="desktop" style="width: 10%">Status</th>
-                <th class="desktop" style="width: 15%">Last Login</th>
-                <th class="desktop" class="text-center">Action</th>
+                <th class="desktop" style="width: 10%">Last Login</th>
+                <th class="desktop" style="width: 10%" class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="text-center" colspan="6">Data not loaded!</td>
+                <td class="text-center" colspan="7">Data not loaded!</td>
             </tr>
         </tbody>
     </table>

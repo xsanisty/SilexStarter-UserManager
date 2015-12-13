@@ -11,17 +11,13 @@
     ]) }}
 {% endblock %}
 
-{% block breadcrumb %}
-    <a href="{{url_for('admin.home')}}">Home</a> / <a href="#">Group</a>
-{% endblock %}
-
 {% block content %}
     <table class="table table-condensed table-striped" id="group_table" style="width: 100%">
         <thead>
             <tr>
                 <th class="all">Name</th>
                 <th class="desktop">Description</th>
-                <th class="desktop text-center" style="width: 15%">Action</th>
+                <th class="desktop text-center" style="width: 10%">Action</th>
             </tr>
         </thead>
         <tbody>

@@ -5,7 +5,7 @@ namespace Xsanisty\UserManager\Repository;
 use Exception;
 use Cartalyst\Sentry\Sentry;
 use Cartalyst\Sentry\Users\ProviderInterface;
-use Xsanisty\Datatable\DatatableResponseBuilder;
+use Xsanisty\UserManager\Contract\UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -186,7 +186,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function createDatatableQuery()
     {
-        $currentUser    = $this->getCurrentUser();
+        $currentUser = $this->getCurrentUser();
 
         return $this->userProvider->createModel()->where('id', '<>', $currentUser->id);
     }

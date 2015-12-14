@@ -5,7 +5,7 @@ namespace Xsanisty\UserManager\Controller;
 use Exception;
 use Xsanisty\Admin\DashboardModule;
 use Cartalyst\Sentry\Users\UserInterface;
-use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
+use Xsanisty\UserManager\Contract\PermissionRepositoryInterface;
 
 class PermissionController
 {

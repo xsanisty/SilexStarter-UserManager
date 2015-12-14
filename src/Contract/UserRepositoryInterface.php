@@ -1,6 +1,6 @@
 <?php
 
-namespace Xsanisty\UserManager\Repository;
+namespace Xsanisty\UserManager\Contract;
 
 interface UserRepositoryInterface
 {

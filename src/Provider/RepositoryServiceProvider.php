@@ -18,21 +18,21 @@ class RepositoryServiceProvider implements ServiceProviderInterface
                 return new UserRepository($app['sentry'], $app['sentry.user']);
             }
         );
-        $app->bind('Xsanisty\UserManager\Repository\UserRepositoryInterface', 'Xsanisty\UserManager\Repository\UserRepository');
+        $app->bind('Xsanisty\UserManager\Contract\UserRepositoryInterface', 'Xsanisty\UserManager\Repository\UserRepository');
 
         $app['Xsanisty\UserManager\Repository\GroupRepository'] = $app->share(
             function (Application $app) {
                 return new GroupRepository($app['sentry.group']);
             }
         );
-        $app->bind('Xsanisty\UserManager\Repository\GroupRepositoryInterface', 'Xsanisty\UserManager\Repository\GroupRepository');
+        $app->bind('Xsanisty\UserManager\Contract\GroupRepositoryInterface', 'Xsanisty\UserManager\Repository\GroupRepository');
 
         $app['Xsanisty\UserManager\Repository\PermissionRepository'] = $app->share(
             function (Application $app) {
                 return new PermissionRepository(new Permission);
             }
         );
-        $app->bind('Xsanisty\UserManager\Repository\PermissionRepositoryInterface', 'Xsanisty\UserManager\Repository\PermissionRepository');
+        $app->bind('Xsanisty\UserManager\Contract\PermissionRepositoryInterface', 'Xsanisty\UserManager\Repository\PermissionRepository');
     }
 
     public function boot(Application $app)

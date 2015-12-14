@@ -3,7 +3,7 @@
 namespace Xsanisty\UserManager\Repository;
 
 use Cartalyst\Sentry\Groups\ProviderInterface;
-use Xsanisty\Datatable\DatatableResponseBuilder;
+use Xsanisty\UserManager\Contract\GroupRepositoryInterface;
 
 class GroupRepository implements GroupRepositoryInterface
 {
@@ -15,21 +15,33 @@ class GroupRepository implements GroupRepositoryInterface
         $this->groupProvider    = $groupProvider;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function findById($id)
     {
         return $this->groupProvider->findById($id);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function findByName($name)
     {
         return $this->groupProvider->findByName($name);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function findAll()
     {
         return $this->groupProvider->findAll();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function create(array $groupData)
     {
         $groupData = $this->prepareData($groupData);
@@ -37,6 +49,9 @@ class GroupRepository implements GroupRepositoryInterface
         return $this->groupProvider->create($groupData);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function update($id, $groupData)
     {
         $group      = $this->findById($id);
@@ -45,16 +60,29 @@ class GroupRepository implements GroupRepositoryInterface
         return $group->update($groupData);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete($id)
     {
         return $this->groupProvider->findById($id)->delete();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function createDatatableQuery()
     {
         return $this->groupProvider->createModel();
     }
 
+    /**
+     * Prepare group data structure.
+     *
+     * @param  array  $data Thhe group information
+     *
+     * @return array        Updated group information
+     */
     protected function prepareData(array $data)
     {
         if (isset($data['permissions'])) {

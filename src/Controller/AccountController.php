@@ -6,7 +6,6 @@ use Exception;
 use InvalidArgumentException;
 use Xsanisty\Admin\DashboardModule;
 use Cartalyst\Sentry\Users\UserInterface;
-use SilexStarter\Controller\DispatcherAwareController;
 
 class AccountController
 {

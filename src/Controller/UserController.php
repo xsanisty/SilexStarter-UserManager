@@ -3,9 +3,9 @@
 namespace Xsanisty\UserManager\Controller;
 
 use Exception;
-use Xsanisty\UserManager\Repository\GroupRepositoryInterface;
-use Xsanisty\UserManager\Repository\UserRepositoryInterface;
-use Xsanisty\UserManager\Repository\PermissionRepositoryInterface;
+use Xsanisty\UserManager\Contract\GroupRepositoryInterface;
+use Xsanisty\UserManager\Contract\UserRepositoryInterface;
+use Xsanisty\UserManager\Contract\PermissionRepositoryInterface;
 use Xsanisty\Admin\DashboardModule;
 
 class UserController

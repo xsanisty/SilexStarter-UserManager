@@ -19,13 +19,58 @@ class UserCreateCommand extends Command
     {
         $this
             ->setName('user:create')
-            ->setDescription('Create new user in database');
+            ->setDescription('Create new user in database')
+            ->addOption(
+                'login-email',
+                'l',
+                InputOption::VALUE_REQUIRED,
+                'The user email address used for login'
+            )
+            ->addOption(
+                'password',
+                'p',
+                InputOption::VALUE_REQUIRED,
+                'The user password'
+            )
+            ->addOption(
+                'first-name',
+                'fn',
+                InputOption::VALUE_REQUIRED,
+                'The user first name'
+            )
+            ->addOption(
+                'last-name',
+                'ln',
+                InputOption::VALUE_REQUIRED,
+                'The user last name'
+            )
+            ->addOption(
+                'admin',
+                'a',
+                InputOption::VALUE_NONE,
+                'Give user administrator right'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app = $this->getSilexStarter();
-        $userData = $this->populateUserData($input, $output);
+        $app    = $this->getSilexStarter();
+        $email  = $input->getOption('login-email');
+        $passwd = $input->getOption('password');
+
+        if ($email && $passwd) {
+            $isAdmin    = $input->getOption('admin');
+            $userData   = [
+                'email'         => $email,
+                'password'      => $passwd,
+                'first_name'    => (string) $input->getOption('first-name'),
+                'last_name'     => (string) $input->getOption('last-name'),
+                'activated'     => 1,
+                'permissions'   => $isAdmin ? ['admin' => 1] : []
+            ];
+        } else {
+            $userData   = $this->populateUserData($input, $output);
+        }
 
         $app['sentry']->register($userData);
 

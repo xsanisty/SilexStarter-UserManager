@@ -80,7 +80,7 @@ class GroupController
     public function store()
     {
         try {
-            $group = Request::only(['name', 'description', 'permissions']);
+            $group = Request::only(['name', 'description', 'permissions'], [null, '', []]);
 
             $this->groupRepository->create($group);
 

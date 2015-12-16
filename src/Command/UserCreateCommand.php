@@ -22,7 +22,7 @@ class UserCreateCommand extends Command
             ->setDescription('Create new user in database')
             ->addOption(
                 'login-email',
-                'l',
+                'e',
                 InputOption::VALUE_REQUIRED,
                 'The user email address used for login'
             )
@@ -34,13 +34,13 @@ class UserCreateCommand extends Command
             )
             ->addOption(
                 'first-name',
-                'fn',
+                'f',
                 InputOption::VALUE_REQUIRED,
                 'The user first name'
             )
             ->addOption(
                 'last-name',
-                'ln',
+                'l',
                 InputOption::VALUE_REQUIRED,
                 'The user last name'
             )

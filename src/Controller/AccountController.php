@@ -57,6 +57,7 @@ class AccountController
     {
         try {
             $password   = Request::get('password');
+            $picture    = Request::file('profile_pic');
 
             if ($password && $password != Request::get('confirm_password')) {
                 throw new InvalidArgumentException("Password and confirmation password not match", 1);
@@ -64,6 +65,19 @@ class AccountController
 
             if (trim($password)) {
                 $this->user->password = $password;
+            }
+
+            if ($picture && $picture->isValid()) {
+                $newName    = md5(microtime()) . '.' . $picture->guessClientExtension();
+                $targetDir  = Config::get('app')['path.public'] . 'assets/img/profile/';
+
+                $picture->move($targetDir, $newName);
+
+                if ($this->user->profile_pic) {
+                    File::remove($targetDir . $this->user->profile_pic);
+                }
+
+                $this->user->profile_pic = $newName;
             }
 
             $this->user->first_name   = Request::get('first_name');

@@ -63,6 +63,11 @@ class UserRepository implements UserRepositoryInterface
         return $this->userProvider->findByCredential($credential);
     }
 
+    public function findByKeyword($keyword)
+    {
+
+    }
+
     /**
      * Delete user by id.
      *

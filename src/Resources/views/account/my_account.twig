@@ -18,67 +18,89 @@
     </div>
 </div>
 {% endif %}
-
 <div class="row">
-    <div class="col-md-7">
-        <div class="widget">
-            <div class="widget-title">
-                <i class="fa fa-user"></i> My Account Information
+    <div class="col-md-10">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">My Account Information</h3>
                 <div class="clearfix"></div>
             </div>
-            <div class="widget-body">
-                <form action="{{url_for('usermanager.update_account')}}" class="form-horizontal" id="user_form" method="post">
-                    <input type="hidden" id="_method" name="_method" value="POST">
-                    <input type="hidden" id="id" name="id">
-                    <div class="form-group">
-                        <label for="email" class="col-md-4">Email</label>
-                        <div class="col-md-8">
-                            {{userdata.email}}
-                        </div>
-                    </div>
+            <div class="box-body">
+                <form action="{{url_for('usermanager.update_account')}}" class="form-horizontal" id="user_form" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-7 col-md-offset-1">
 
-                    <div class="form-group">
-                        <label for="first_name" class="col-md-4">First Name</label>
-                        <div class="col-md-8">
-                            <input id="first_name" name="first_name" type="text" class="form-control input-sm" value="{{userdata.first_name | default('')}}">
-                        </div>
-                    </div>
+                            <input type="hidden" id="_method" name="_method" value="POST">
+                            <input type="hidden" id="id" name="id">
+                            <div class="form-group">
+                                <label for="email" class="col-md-4">Email</label>
+                                <div class="col-md-8">
+                                    {{userdata.email}}
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <label for="last_name" class="col-md-4">Last Name</label>
-                        <div class="col-md-8">
-                            <input id="last_name" name="last_name" type="text" class="form-control input-sm" value="{{userdata.last_name | default('')}}">
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <label for="first_name" class="col-md-4">First Name</label>
+                                <div class="col-md-8">
+                                    <input id="first_name" name="first_name" type="text" class="form-control input-sm" value="{{userdata.first_name | default('')}}">
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <label for="password" class="col-md-4">Password</label>
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input type="password" name="password" id="password" class="form-control input-sm" >
-                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="Fill only when you want to change your password">
-                                    <i class="fa fa-fw fa-info-circle"></i>
-                                </span>
+                            <div class="form-group">
+                                <label for="last_name" class="col-md-4">Last Name</label>
+                                <div class="col-md-8">
+                                    <input id="last_name" name="last_name" type="text" class="form-control input-sm" value="{{userdata.last_name | default('')}}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password" class="col-md-4">Password</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <input type="password" name="password" id="password" class="form-control input-sm" >
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="Fill only when you want to change your password">
+                                            <i class="fa fa-fw fa-info-circle"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm_password" class="col-md-4">Confirm Password</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <input id="confirm_password" name="confirm_password" type="password" class="form-control input-sm">
+                                        <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="Re-type your password to avoid typo">
+                                            <i class="fa fa-fw fa-info-circle"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="group" class="col-md-4">Assigned Group</label>
+                                <div class="col-md-8">
+                                    {% for group in groups %}{{group.name}},{% else %} No group assigned{% endfor %}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="confirm_password" class="col-md-4">Confirm Password</label>
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input id="confirm_password" name="confirm_password" type="password" class="form-control input-sm">
-                                <span class="input-group-addon" data-toggle="tooltip" data-placement="bottom" title="Re-type your password to avoid typo">
-                                    <i class="fa fa-fw fa-info-circle"></i>
-                                </span>
+                        <div class="col-md-2 col-md-offset-1">
+                            <div class="hidden">
+                                <input type="file" name="profile_pic" accept="image/*" id="profile_pic">
                             </div>
-                        </div>
-                    </div>
+                            <div style="border:solid 1px #ddd; width: 100%; height: 120px; cursor: pointer; text-align:center" id="profile-pic-container">
+                                <img src="
+                                        {% if userdata.profile_pic %}
+                                            {{ asset('img/profile/' ~ userdata.profile_pic) }}
+                                        {% else %}
+                                            {{ asset('@silexstarter-dashboard/img/avatar.jpg') }}
+                                        {% endif %}
+                                    "
+                                    alt="" id="profile-pic-preview" style="width: 120px; height:120px">
 
-                    <div class="form-group">
-                        <label for="group" class="col-md-4">Assigned Group</label>
-                        <div class="col-md-8">
-                            {% for group in groups %}{{group.name}},{% else %} No group assigned{% endfor %}
+                                Click to change picture
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -92,4 +114,30 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
+
+    <script>
+    $('#profile-pic-container').click(function(e){
+        $('#profile_pic').click();
+    });
+
+    $('#profile_pic').change(function(){
+        var reader  = new FileReader();
+        var preview = $('#profile-pic-preview');
+        var file    = this.files[0];
+
+        reader.onloadend = function () {
+            preview.attr('src', reader.result);
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.attr('src', '');
+        }
+    });
+    </script>
 {% endblock %}

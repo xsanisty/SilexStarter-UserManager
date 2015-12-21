@@ -12,6 +12,8 @@ interface UserRepositoryInterface
 
     public function findByCredential(array $credential);
 
+    public function findByKeyword($keyword);
+
     public function delete($id);
 
     public function create(array $userData);

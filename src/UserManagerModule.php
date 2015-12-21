@@ -143,7 +143,7 @@ class UserManagerModule implements ModuleProviderInterface
      */
     protected function registerNavbarMenu()
     {
-        $user   = $this->app['sentry']->getUser();
+        $user   = $this->app['user'];
         $name   = $user ? $user->first_name.' '.$user->last_name : '';
         $email  = $user ? $user->email : '';
         $name   = trim($name) ? $name : $email;

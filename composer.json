@@ -1,0 +1,24 @@
+{
+    "name": "xsanisty/silexstarter-usermanager",
+    "description": "User and role manager utility of SilexStarter application",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Xsanisty Dev Team",
+            "email": "developers@xsanisty.com"
+        },
+        {
+            "name": "Ikhsan Agustian",
+            "email": "ikhsan017@gmail.com"
+        }
+    ],
+    "require" : {
+        "intervention/image" : "2.2.2"
+    },
+    "autoload" : {
+        "psr-4": {
+            "Xsanisty\\UserManager\\" : [ "src/", "tests/"]
+        }
+    },
+    "minimum-stability": "stable"
+}

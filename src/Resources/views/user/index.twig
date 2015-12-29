@@ -1,0 +1,65 @@
+{% set template = config.get('@silexstarter-dashboard.config.template') %}
+{% extends '@silexstarter-dashboard/'~ template ~'/index.twig' %}
+
+{% block stylesheet %}
+    {{parent()}}
+
+    {{ stylesheet([
+        '@silexstarter-datatable/css/dataTables.bootstrap.css',
+        '@silexstarter-datatable/css/responsive.bootstrap.min.css',
+        '@silexstarter-usermanager/css/bootstrap-select.min.css',
+    ]) }}
+{% endblock %}
+
+{% block content %}
+    <table class="table table-condensed table-striped" id="user_table" style="width: 100%; max-width: 1200px">
+        <thead>
+            <tr>
+                <th class="all" style="width: 5%"></th>
+                <th class="all" style="width: 20%">First Name</th>
+                <th class="all" style="width: 20%">Last Name</th>
+                <th class="desktop" style="width: 15%">Email</th>
+                <th class="desktop" style="width: 10%">Status</th>
+                <th class="desktop" style="width: 10%">Last Login</th>
+                <th class="desktop" style="width: 10%" class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-center" colspan="7">Data not loaded!</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block modal %}
+    {{parent()}}
+    {% include '@silexstarter-usermanager/user/modal.twig' %}
+{% endblock %}
+
+{% block javascript %}
+    {{parent()}}
+
+    <script>
+        var datatableUrl= '{{url_for('usermanager.user.datatable')}}';
+        var datatableId = '#user_table';
+        var formId      = '#user_form';
+        var modalId     = '#user_modal';
+        var createLabel = 'Add new user'
+        var permissions = {{permissions|json_encode|raw}};
+        var groups      = {{groups|json_encode|raw}};
+    </script>
+
+    {{ javascript([
+        '@silexstarter-datatable/js/jquery.dataTables.min.js',
+        '@silexstarter-datatable/js/dataTables.bootstrap.min.js',
+        '@silexstarter-datatable/js/dataTables.responsive.min.js',
+        '@silexstarter-usermanager/js/bootstrap-select.min.js',
+        '@silexstarter-usermanager/js/datatable.js',
+    ]) }}
+
+    {% if current_user.hasAnyAccess(['admin', 'usermanager.user.create']) %}
+        {{ javascript('@silexstarter-usermanager/js/create.js') }}
+    {% endif %}
+
+{% endblock %}

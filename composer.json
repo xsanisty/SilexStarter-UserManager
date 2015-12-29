@@ -12,6 +12,9 @@
             "email": "ikhsan017@gmail.com"
         }
     ],
+    "require" : {
+        "intervention/image" : "2.2.2"
+    },
     "autoload" : {
         "psr-4": {
             "Xsanisty\\UserManager\\" : [ "src/", "tests/"]

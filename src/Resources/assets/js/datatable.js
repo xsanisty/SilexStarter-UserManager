@@ -159,7 +159,6 @@ $(document).ready(function(){
 
         $.ajax({
             'method' : 'POST',
-            'data' : $(formId).serialize(),
             'url' : $('#_method').val() == 'PUT' ? $(formId).attr('action') + $('#id').val() : $(formId).attr('action'),
             'data' : formData,
             'cache' : false,

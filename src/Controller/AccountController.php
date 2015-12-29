@@ -4,16 +4,19 @@ namespace Xsanisty\UserManager\Controller;
 
 use Exception;
 use InvalidArgumentException;
+use Intervention\Image\ImageManager;
 use Xsanisty\Admin\DashboardModule;
 use Cartalyst\Sentry\Users\UserInterface;
 
 class AccountController
 {
     protected $user;
+    protected $image;
 
-    public function __construct(UserInterface $user)
+    public function __construct(UserInterface $user, ImageManager $image)
     {
-        $this->user = $user;
+        $this->user  = $user;
+        $this->image = $image;
     }
 
     /**
@@ -71,7 +74,7 @@ class AccountController
                 $newName    = md5(microtime()) . '.' . $picture->guessClientExtension();
                 $targetDir  = Config::get('app')['path.public'] . 'assets/img/profile/';
 
-                $picture->move($targetDir, $newName);
+                $this->image->make($picture)->fit(250)->save($targetDir . $newName);
 
                 if ($this->user->profile_pic) {
                     File::remove($targetDir . $this->user->profile_pic);

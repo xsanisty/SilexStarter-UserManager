@@ -3,13 +3,15 @@
 namespace Xsanisty\UserManager\Controller;
 
 use Exception;
-use Xsanisty\UserManager\Contract\GroupRepositoryInterface;
+use Intervention\Image\ImageManager;
 use Xsanisty\UserManager\Contract\UserRepositoryInterface;
+use Xsanisty\UserManager\Contract\GroupRepositoryInterface;
 use Xsanisty\UserManager\Contract\PermissionRepositoryInterface;
 use Xsanisty\Admin\DashboardModule;
 
 class UserController
 {
+    protected $image;
     protected $userRepository;
     protected $groupRepository;
     protected $permissionRepository;
@@ -17,8 +19,10 @@ class UserController
     public function __construct(
         UserRepositoryInterface $userRepository,
         GroupRepositoryInterface $groupRepository,
-        PermissionRepositoryInterface $permissionRepository
+        PermissionRepositoryInterface $permissionRepository,
+        ImageManager $image
     ) {
+        $this->image = $image;
         $this->userRepository = $userRepository;
         $this->groupRepository = $groupRepository;
         $this->permissionRepository = $permissionRepository;
@@ -131,7 +135,7 @@ class UserController
                 $newName    = md5(microtime()) . '.' . $picture->guessClientExtension();
                 $targetDir  = Config::get('app')['path.public'] . 'assets/img/profile/';
 
-                $picture->move($targetDir, $newName);
+                $this->image->make($picture)->fit(250)->save($targetDir . $newName);
 
                 $data['profile_pic'] = $newName;
             }
@@ -191,7 +195,7 @@ class UserController
                 $newName    = md5(microtime()) . '.' . $picture->guessClientExtension();
                 $targetDir  = Config::get('app')['path.public'] . 'assets/img/profile/';
 
-                $picture->move($targetDir, $newName);
+                $this->image->make($picture)->fit(250)->save($targetDir . $newName);
 
                 $data['profile_pic'] = $newName;
 

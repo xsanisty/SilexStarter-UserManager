@@ -6,7 +6,11 @@
 {% if success is not empty %}
 <div class="row">
     <div class="col-md-12">
-        <div class="alert alert-success">{{success}}</div>
+        <div class="alert alert-success alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <h4><i class="icon fa fa-check"></i> Success!</h4>
+            {{success}}
+        </div>
     </div>
 </div>
 {% endif %}
@@ -14,7 +18,11 @@
 {% if error is not empty %}
 <div class="row">
     <div class="col-md-12">
-        <div class="alert alert-danger">{{error}}</div>
+        <div class="alert alert-danger alert-dismissable">
+            <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+            <h4><i class="icon fa fa-warning"></i> Error!</h4>
+            {{error}}
+        </div>
     </div>
 </div>
 {% endif %}

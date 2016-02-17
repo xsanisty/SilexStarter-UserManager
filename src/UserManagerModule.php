@@ -8,19 +8,39 @@ namespace Xsanisty\UserManager;
 use Silex\Application;
 use SilexStarter\Module\ModuleInfo;
 use SilexStarter\Module\ModuleResource;
-use SilexStarter\Contracts\ModuleProviderInterface;
+use SilexStarter\Module\ModuleProvider;
 use Xsanisty\Admin\DashboardModule;
 
-class UserManagerModule implements ModuleProviderInterface
+class UserManagerModule extends ModuleProvider
 {
-    protected $app;
-
     /**
      * {@inheritdoc}
      */
     public function __construct(Application $app)
     {
         $this->app = $app;
+
+        $this->info = new ModuleInfo(
+            [
+                'name'          => 'SilexStarter User Manager',
+                'author_name'   => 'Xsanisty Development Team',
+                'author_email'  => 'developers@xsanisty.com',
+                'repository'    => 'https://github.com/xsanisty/SilexStarter-UserManager',
+                'description'   => 'Provide functionality to manage user, group/role, and permission'
+            ]
+        );
+
+        $this->resources = new ModuleResource(
+            [
+                'routes'        => 'Resources/routes.php',
+                'views'         => 'Resources/views',
+                'config'        => 'Resources/config',
+                'assets'        => 'Resources/assets',
+                'migrations'    => 'Resources/migrations',
+                'controllers'   => 'Controller',
+                'commands'      => 'Command',
+            ]
+        );
     }
 
     /**
@@ -34,42 +54,9 @@ class UserManagerModule implements ModuleProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getInfo()
-    {
-        return new ModuleInfo(
-            [
-                'name'          => 'SilexStarter User Manager',
-                'author_name'   => 'Xsanisty Development Team',
-                'author_email'  => 'developers@xsanisty.com',
-                'repository'    => 'https://github.com/xsanisty/SilexStarter-UserManager',
-                'description'   => 'Provide functionality to manage user, group/role, and permission'
-            ]
-        );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getModuleIdentifier()
     {
         return 'silexstarter-usermanager';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getResources()
-    {
-        return new ModuleResource(
-            [
-                'routes'        => 'Resources/routes.php',
-                'views'         => 'Resources/views',
-                'config'        => 'Resources/config',
-                'assets'        => 'Resources/assets',
-                'controllers'   => 'Controller',
-                'commands'      => 'Command',
-            ]
-        );
     }
 
     /**
@@ -90,23 +77,12 @@ class UserManagerModule implements ModuleProviderInterface
             'usermanager.permission.create' => 'Create new permission in the database',
             'usermanager.permission.edit'   => 'Edit existing permission',
             'usermanager.permission.delete' => 'Remove permission from the database',
+            'usermanager.company.read'      => 'Read company list in the database',
+            'usermanager.company.create'    => 'Create new company in the database',
+            'usermanager.company.edit'      => 'Edit existing company info',
+            'usermanager.company.delete'    => 'Remove company from database',
+            'usermanager.company.admin'     => 'Company administrator, manage company info and user'
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function install()
-    {
-
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function uninstall()
-    {
-
     }
 
     /**
@@ -117,6 +93,8 @@ class UserManagerModule implements ModuleProviderInterface
         $this->app->registerServices(
             $this->app['config']['@silexstarter-usermanager.services']
         );
+
+        $this->app['static_proxy_manager']->addProxy('Sentry', 'Xsanisty\UserManager\StaticProxy\Sentry');
 
         $provider = $this;
 
@@ -131,14 +109,6 @@ class UserManagerModule implements ModuleProviderInterface
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function boot()
-    {
-    }
-
-
-    /**
      * Register menu item to navbar menu
      */
     protected function registerNavbarMenu()
@@ -150,13 +120,23 @@ class UserManagerModule implements ModuleProviderInterface
         $menu   = $this->app['menu_manager']->get('admin_navbar')->getItem('user');
 
         $menu->addChildren(
-            'user-account',
+            'my-account',
             [
                 'label'     => 'My Account',
                 'icon'      => 'user',
                 'url'       => Url::to('usermanager.my_account'),
                 'meta'      => ['type' => 'link'],
                 'options'   => ['position' => 'after:user-header-divider']
+            ]
+        );
+
+        $menu->addChildren(
+            'my-company',
+            [
+                'label'     => 'My Company',
+                'icon'      => 'building-o',
+                'url'       => Url::to('usermanager.my_company'),
+                'meta'      => ['type' => 'link']
             ]
         );
     }
@@ -206,6 +186,17 @@ class UserManagerModule implements ModuleProviderInterface
                 'title'         => 'Manage Permissions',
                 'url'           => Url::to('usermanager.permission.index'),
                 'permission'    => ['usermanager.permission.read']
+            ]
+        );
+
+        $menu->addChildren(
+            'manage-company',
+            [
+                'icon'          => 'building-o',
+                'label'         => 'Companies',
+                'title'         => 'Manage Companies',
+                'url'           => Url::to('usermanager.company.index'),
+                'permission'    => ['usermanager.company.read']
             ]
         );
     }

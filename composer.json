@@ -13,6 +13,7 @@
         }
     ],
     "require" : {
+        "cartalyst/sentry" : "~2.0",
         "intervention/image" : "2.2.2"
     },
     "autoload" : {

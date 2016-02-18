@@ -37,6 +37,16 @@ Route::group(
                 'permission' => 'usermanager.permission',
             ]
         );
+
+        Route::post('/company/datatable', 'CompanyController:datatable', ['as' => 'usermanager.company.datatable']);
+        Route::resource(
+            '/company',
+            'CompanyController',
+            [
+                'as' => 'usermanager.company',
+                'permission' => 'usermanager.company',
+            ]
+        );
     },
     [
         'before'    => 'admin.auth',

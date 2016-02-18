@@ -1,0 +1,87 @@
+<div class="modal fade" id="company_form_modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                Edit Company Information
+            </div>
+            <div class="modal-body">
+                <form action="" class="form-horizontal" id="company_form" method="post">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-1">
+                            <input type="hidden" id="_method_field" name="_method" value="POST">
+                            <input type="hidden" id="id_field" name="data[id]">
+                            <div class="form-group">
+                                <label for="name_field" class="col-md-4">Company Name</label>
+                                <div class="col-md-8">
+                                    <input id="name_field" name="data[name]" type="text" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address_field" class="col-md-4">Address</label>
+                                <div class="col-md-8">
+                                    <input id="address_field" name="data[address]" type="text" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="address_field" class="col-md-4">Additional Address</label>
+                                <div class="col-md-8">
+                                    <input id="address_field" name="data[address_additional]" type="text" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="state_field" class="col-md-4">City</label>
+                                <div class="col-md-8">
+                                    <input id="state_field" name="data[city]" type="text" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="state_field" class="col-md-4">State</label>
+                                <div class="col-md-8">
+                                    <input id="state_field" name="data[state]" type="text" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="country_field" class="col-md-4">Country</label>
+                                <div class="col-md-8">
+                                    <input id="country_field" name="data[country]" type="text" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone_field" class="col-md-4">Phone Number</label>
+                                <div class="col-md-8">
+                                    <input id="phone_field" name="data[phone]" type="text" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fax_field" class="col-md-4">Fax Number</label>
+                                <div class="col-md-8">
+                                    <input id="fax_field" name="data[fax]" type="text" class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button id="btn-company-save" class="btn btn-sm btn-primary pull-right" style="margin-right: 5px">Save</button>
+                                    <button id="btn-company-cancel" class="btn btn-sm btn-danger pull-right" style="margin-right: 5px" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="hidden">
+                                <input type="file" name="logo_pic" accept="image/*" id="logo_pic">
+                            </div>
+                            <div style="border:solid 1px #ddd; width: 100%; min-height: 120px; cursor: pointer; text-align:center" id="logo_pic_container">
+                                <img src="" alt="" id="logo_pic_preview" style="width: 240px;">
+
+                                Click to change logo
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

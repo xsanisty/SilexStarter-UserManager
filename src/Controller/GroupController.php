@@ -107,7 +107,7 @@ class GroupController
     public function update($id)
     {
         try {
-            $group = Request::only(['name', 'description', 'permissions']);
+            $group = Request::only(['name', 'description', 'permissions'], [null, '', []]);
 
             $this->groupRepository->update($id, $group);
 

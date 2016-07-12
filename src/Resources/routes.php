@@ -47,9 +47,37 @@ Route::group(
                 'permission' => 'usermanager.company',
             ]
         );
+
+        Route::resource(
+            'user/company',
+            'CompanyUserController',
+            [
+                'as'        => 'usermanager.company_user',
+                'except'    => ['create', 'edit']
+            ]
+        );
+
+        Route::post(
+            'user/company/datatable',
+            'CompanyUserController:datatable',
+            [
+                'as'        => 'usermanager.company_user.datatable',
+            ]
+        );
     },
     [
         'before'    => 'admin.auth',
         'namespace' => 'Xsanisty\UserManager\Controller'
     ]
 );
+
+if (Config::get('@silexstarter-usermanager.config.enable_registration')) {
+    Route::get(
+        '/register',
+        'AccountController::register',
+        [
+            'as'        => 'usermanager.register',
+            'namespace' => 'Xsanisty\UserManager\Controller'
+        ]
+    );
+}

@@ -81,7 +81,7 @@ class UserManagerModule extends ModuleProvider
             'usermanager.company.create'    => 'Create new company in the database',
             'usermanager.company.edit'      => 'Edit existing company info',
             'usermanager.company.delete'    => 'Remove company from database',
-            'usermanager.company.admin'     => 'Company administrator, manage company info and user'
+            'usermanager.company.admin'     => 'Company administrator, manage company info and user',
         ];
     }
 
@@ -93,8 +93,6 @@ class UserManagerModule extends ModuleProvider
         $this->app->registerServices(
             $this->app['config']['@silexstarter-usermanager.services']
         );
-
-        $this->app['static_proxy_manager']->addProxy('Sentry', 'Xsanisty\UserManager\StaticProxy\Sentry');
 
         $provider = $this;
 
@@ -130,15 +128,42 @@ class UserManagerModule extends ModuleProvider
             ]
         );
 
-        $menu->addChildren(
-            'my-company',
-            [
-                'label'     => 'My Company',
-                'icon'      => 'building-o',
-                'url'       => Url::to('usermanager.my_company'),
-                'meta'      => ['type' => 'link']
-            ]
-        );
+        if ($this->app['config']->get('@silexstarter-usermanager.config.enable_switch_tenant')) {
+            $menu->addChildren(
+                'my-company',
+                [
+                    'label'     => 'My Company',
+                    'icon'      => 'building-o',
+                    'url'       => Url::to('usermanager.company_user.index'),
+                    'meta'      => ['type' => 'link']
+                ]
+            );
+
+            $company = $this->app['menu_manager']->get('admin_navbar')->createItem(
+                'company',
+                [
+                    'icon'      => 'building-o',
+                    'url'       => '#company',
+                    'label'     => 'Switch Company',
+                    'meta'      => [
+                        'renderer' => 'general-menu-renderer'
+                    ],
+                    'options'   => [
+                        'position'  => 'before:user',
+                    ]
+                ]
+            );
+
+            $company->addChildren(
+                'my-company',
+                [
+                    'label'     => 'My Company',
+                    'icon'      => 'building-o',
+                    'url'       => Url::to('usermanager.company_user.index'),
+                    'meta'      => ['type' => 'link']
+                ]
+            );
+        }
     }
 
     /**

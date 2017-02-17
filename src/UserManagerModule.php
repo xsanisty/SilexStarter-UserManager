@@ -112,8 +112,13 @@ class UserManagerModule extends ModuleProvider
     protected function registerNavbarMenu()
     {
         $user   = $this->app['user'];
-        $name   = $user ? $user->first_name.' '.$user->last_name : '';
-        $email  = $user ? $user->email : '';
+
+        if (!$user) {
+            return;
+        }
+
+        $name   = $user->first_name.' '.$user->last_name;
+        $email  = $user->email;
         $name   = trim($name) ? $name : $email;
         $menu   = $this->app['menu_manager']->get('admin_navbar')->getItem('user');
 

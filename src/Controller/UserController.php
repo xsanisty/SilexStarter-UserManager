@@ -36,17 +36,6 @@ class UserController
      */
     public function index()
     {
-        Event::fire(DashboardModule::INIT);
-        Menu::get('admin_sidebar')->setActive('user-manager.manage-user');
-        Menu::get('admin_breadcrumb')->createItem(
-            'manage-user',
-            [
-                'label' => 'Manage Users',
-                'icon'  => 'user',
-                'url'   => Url::to('usermanager.user.index')
-            ]
-        );
-
         return Response::view(
             '@silexstarter-usermanager/user/index',
             [
@@ -55,7 +44,8 @@ class UserController
                 'page_description'  => 'modify user\'s data, group, permission, etc',
                 'permissions'       => $this->permissionRepository->groupByCategory(),
                 'groups'            => $this->groupRepository->findAll(),
-                'user_form_template'=> Config::get('@silexstarter-usermanager.config.user_form_template')
+                'user_form_template'=> Config::get('@silexstarter-usermanager.config.user_form_template'),
+                'active_menu'       => 'admin_sidebar.user-manager.manage-user'
             ]
         );
     }

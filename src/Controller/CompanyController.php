@@ -30,20 +30,11 @@ class CompanyController
      */
     public function index()
     {
-        Event::fire(DashboardModule::INIT);
-        Menu::get('admin_breadcrumb')->createItem(
-            'manage-company',
-            [
-                'label' => ucfirst('company') . ' list',
-                'url'   => Url::to('silexstarter-usermanager.company.index')
-            ]
-        );
-
         return View::make(
             '@silexstarter-usermanager/company/index',
             [
-                'title'     => ucfirst('company') . ' list',
-                'page_title'=> ucfirst('company') . ' list',
+                'title'         => 'Company list',
+                'page_title'    => 'Company list',
             ]
         );
     }
@@ -60,7 +51,7 @@ class CompanyController
         }
 
         return Response::ajax(
-            ucfirst('company') . ' not found!',
+            'Company not found!',
             404,
             [[
                 'message'   => $e->getMessage(),
@@ -89,8 +80,7 @@ class CompanyController
 
             $entity = $this->repository->create($data);
 
-            return Response::ajax('New ' . ucfirst('company') . ' has been created!', 201);
-
+            return Response::ajax('New ' . 'Company has been created!', 201);
         } catch (Exception $e) {
             return Response::ajax(
                 'Error occured while creating new company!',
@@ -108,7 +98,6 @@ class CompanyController
      */
     public function update($id)
     {
-
         try {
             $data   = Request::get('data');
             $logo   = Request::file('logo_pic');
@@ -129,8 +118,7 @@ class CompanyController
 
             $entity = $this->repository->update($id, $data);
 
-            return Response::ajax(ucfirst('company') . ' has been updated!');
-
+            return Response::ajax('Company has been updated!');
         } catch (Exception $e) {
             return Response::ajax(
                 'Error occured while updating company!',
@@ -158,8 +146,7 @@ class CompanyController
 
             $this->repository->delete($id);
 
-            return Response::ajax(ucfirst('company') . ' has been deleted!');
-
+            return Response::ajax('Company has been deleted!');
         } catch (Exception $e) {
             return Response::ajax(
                 'Error occured while deleting company!',

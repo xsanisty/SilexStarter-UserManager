@@ -26,17 +26,6 @@ class AccountController
      */
     public function myAccount()
     {
-        Event::fire(DashboardModule::INIT);
-
-        Menu::get('admin_breadcrumb')->createItem(
-            'my-account',
-            [
-                'label' => 'My Account',
-                'icon'  => 'user',
-                'url'   => Url::to('usermanager.my_account')
-            ]
-        );
-
         return Response::view(
             '@silexstarter-usermanager/account/my_account',
             [
@@ -89,7 +78,6 @@ class AccountController
             $this->user->save();
 
             Session::flash('success', 'Your information is updated!');
-
         } catch (Exception $e) {
             Session::flash('error', $e->getMessage());
         }

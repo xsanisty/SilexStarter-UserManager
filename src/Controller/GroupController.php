@@ -26,23 +26,13 @@ class GroupController
 
     public function index()
     {
-        Event::fire(DashboardModule::INIT);
-        Menu::get('admin_sidebar')->setActive('user-manager.manage-group');
-        Menu::get('admin_breadcrumb')->createItem(
-            'manage-group',
-            [
-                'label' => 'Manage Groups',
-                'icon'  => 'users',
-                'url'   => Url::to('usermanager.group.index')
-            ]
-        );
-
         return View::make(
             '@silexstarter-usermanager/group/index',
             [
                 'title'         => 'Manage Groups',
                 'page_title'    => 'Manage Groups',
                 'permissions'   => $this->permissionRepository->groupByCategory()
+                'active_menu'   => 'admin_sidebar.user-manager.manage-group'
             ]
         );
     }
@@ -127,7 +117,6 @@ class GroupController
     public function delete($id)
     {
         try {
-
             $this->groupRepository->delete($id);
 
             return Response::ajax('Group has been deleted');

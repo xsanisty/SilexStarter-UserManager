@@ -28,20 +28,11 @@ class CompanyUserController
      */
     public function index()
     {
-        Event::fire(DashboardModule::INIT);
-        Menu::get('admin_breadcrumb')->createItem(
-            'manage-company_user',
-            [
-                'label' => 'My Company',
-                'url'   => Url::to('silexstarter-usermanager.company_user.index')
-            ]
-        );
-
         return View::make(
             '@silexstarter-usermanager/company_user/index',
             [
-                'title'     => 'My Company',
-                'page_title'=> 'My Company',
+                'title'         => 'My Company',
+                'page_title'    => 'My Company',
             ]
         );
     }
@@ -58,7 +49,7 @@ class CompanyUserController
         }
 
         return Response::ajax(
-            ucfirst('company_user') . ' not found!',
+            'User\'s company not found!',
             404,
             [[
                 'message'   => $e->getMessage(),
@@ -77,7 +68,7 @@ class CompanyUserController
         try {
             $entity = $this->repository->create($data);
 
-            return Response::ajax('New ' . ucfirst('company_user') . ' has been created!', 201);
+            return Response::ajax('New ' . 'User\'s company has been created!', 201);
 
         } catch (Exception $e) {
             return Response::ajax(
@@ -101,7 +92,7 @@ class CompanyUserController
         try {
             $entity = $this->repository->update($id, $data);
 
-            return Response::ajax(ucfirst('company_user') . ' has been updated!');
+            return Response::ajax('User\'s company has been updated!');
 
         } catch (Exception $e) {
             return Response::ajax(
@@ -123,7 +114,7 @@ class CompanyUserController
         try {
             $this->repository->delete($id);
 
-            return Response::ajax(ucfirst('company_user') . ' has been deleted!');
+            return Response::ajax('User\'s company has been deleted!');
 
         } catch (Exception $e) {
             return Response::ajax(

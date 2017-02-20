@@ -20,23 +20,12 @@ class PermissionController
 
     public function index()
     {
-        Event::fire(DashboardModule::INIT);
-        Menu::get('admin_sidebar')->setActive('user-manager.manage-permission');
-
-        Menu::get('admin_breadcrumb')->createItem(
-            'manage-permission',
-            [
-                'label' => 'Manage Permissions',
-                'icon'  => 'th-list',
-                'url'   => Url::to('usermanager.permission.index')
-            ]
-        );
-
         return Response::view(
             '@silexstarter-usermanager/permission/index',
             [
-                'title'     => 'Manage User Permissions',
-                'page_title'=> 'Manage User Permissions'
+                'title'         => 'Manage User Permissions',
+                'page_title'    => 'Manage User Permissions'
+                'active_menu'   => 'admin_sidebar.user-manager.manage-permission'
             ]
         );
     }

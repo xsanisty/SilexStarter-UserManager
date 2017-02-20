@@ -31,7 +31,7 @@ class GroupController
             [
                 'title'         => 'Manage Groups',
                 'page_title'    => 'Manage Groups',
-                'permissions'   => $this->permissionRepository->groupByCategory()
+                'permissions'   => $this->permissionRepository->groupByCategory(),
                 'active_menu'   => 'admin_sidebar.user-manager.manage-group'
             ]
         );

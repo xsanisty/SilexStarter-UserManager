@@ -24,7 +24,7 @@ class PermissionController
             '@silexstarter-usermanager/permission/index',
             [
                 'title'         => 'Manage User Permissions',
-                'page_title'    => 'Manage User Permissions'
+                'page_title'    => 'Manage User Permissions',
                 'active_menu'   => 'admin_sidebar.user-manager.manage-permission'
             ]
         );

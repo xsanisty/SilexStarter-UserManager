@@ -3,6 +3,7 @@
 namespace Xsanisty\UserManager\Model;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 use Cartalyst\Sentry\Users\Eloquent\User as SentryUser;
 
 class User extends SentryUser

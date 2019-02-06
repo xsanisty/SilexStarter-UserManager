@@ -48,7 +48,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function findByGroupName()
+    public function findByGroupName($groupName)
     {
 
     }
@@ -56,7 +56,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function findByGroupId()
+    public function findByGroupId($groupId)
     {
 
     }

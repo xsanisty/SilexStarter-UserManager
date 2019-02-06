@@ -10,7 +10,7 @@ interface UserRepositoryInterface
 
     public function findByGroupId($groupId);
 
-    public function findByGroupName($groupName)
+    public function findByGroupName($groupName);
 
     public function findByLogin($login);
 

@@ -46,6 +46,22 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function findByGroupName()
+    {
+
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findByGroupId()
+    {
+
+    }
+
+    /**
      * Get user by user login.
      *
      * @param  string $login The user login (default is email address)

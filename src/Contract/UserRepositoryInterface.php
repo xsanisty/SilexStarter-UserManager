@@ -8,6 +8,10 @@ interface UserRepositoryInterface
 
     public function findById($id);
 
+    public function findByGroupId($groupId);
+
+    public function findByGroupName($groupName)
+
     public function findByLogin($login);
 
     public function findByCredential(array $credential);

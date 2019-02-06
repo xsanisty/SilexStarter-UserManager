@@ -6,16 +6,22 @@ use Exception;
 use Cartalyst\Sentry\Sentry;
 use Cartalyst\Sentry\Users\ProviderInterface;
 use Xsanisty\UserManager\Contract\UserRepositoryInterface;
+use Xsanisty\UserManager\Contract\PermissionRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {
     protected $sentry;
     protected $userProvider;
+    protected $permissionRepo;
 
-    public function __construct(Sentry $sentry, ProviderInterface $userProvider)
-    {
-        $this->userProvider = $userProvider;
-        $this->sentry       = $sentry;
+    public function __construct(
+        Sentry $sentry,
+        ProviderInterface $userProvider,
+        PermissionRepositoryInterface $permissionRepo
+    ) {
+        $this->userProvider     = $userProvider;
+        $this->sentry           = $sentry;
+        $this->permissionRepo   = $permissionRepo;
     }
 
     /**
@@ -156,13 +162,22 @@ class UserRepository implements UserRepositoryInterface
         }
 
         if (isset($userData['permissions'])) {
-            $permissions = $userData['permissions'];
+            $userPermissions = $userData['permissions'];
             $userData['permissions'] = [];
 
-            foreach ($permissions as $perm) {
-                $userData['permissions'][$perm] = 1;
+            foreach ($userPermissions as $permission) {
+                $userData['permissions'][$permission] = 1;
             }
         }
+
+        $permissions = $this->permissionRepo->findAll();
+        $defaultPermissions = [];
+
+        foreach ($permissions as $permission) {
+            $defaultPermissions[$permission->name] = 0;
+        }
+
+        $userData['permissions'] = array_merge($defaultPermissions, $userData['permissions']);
 
         $user->update($userData);
 

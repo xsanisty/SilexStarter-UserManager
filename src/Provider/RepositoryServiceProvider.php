@@ -15,7 +15,11 @@ class RepositoryServiceProvider implements ServiceProviderInterface
     {
         $app['Xsanisty\UserManager\Repository\UserRepository'] = $app->share(
             function (Application $app) {
-                return new UserRepository($app['sentry'], $app['sentry.user']);
+                return new UserRepository(
+                    $app['sentry'],
+                    $app['sentry.user'],
+                    $app['Xsanisty\UserManager\Contract\PermissionRepositoryInterface']
+                );
             }
         );
         $app->bind('Xsanisty\UserManager\Contract\UserRepositoryInterface', 'Xsanisty\UserManager\Repository\UserRepository');

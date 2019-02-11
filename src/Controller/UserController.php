@@ -8,6 +8,7 @@ use Xsanisty\UserManager\Contract\UserRepositoryInterface;
 use Xsanisty\UserManager\Contract\GroupRepositoryInterface;
 use Xsanisty\UserManager\Contract\PermissionRepositoryInterface;
 use Xsanisty\Admin\DashboardModule;
+use YoHang88\LetterAvatar\LetterAvatar;
 
 class UserController
 {
@@ -73,8 +74,8 @@ class UserController
                                                 ? sprintf($deleteTemplate, Url::to('usermanager.user.delete', ['id' => $row->id]))
                                                 : '';
 
-                                $profilePic     = !$row->profile_pic
-                                                ? '<img src="'. Asset::resolvePath('@silexstarter-dashboard/img/avatar.jpg') .'" class="img-circle img-sm" />'
+                                $profilePic     = !$row->profile_pic // TODO update if LetterAvatar has new release
+                                                ? '<img src="'. (new LetterAvatar("$row->first_name $row->last_name")) .'" class="img-circle img-sm" style="margin:0 10px" />'
                                                 : '<img src="'. Asset::resolvePath('img/profile/' . $row->profile_pic) .'" class="img-circle img-sm" />';
 
                                 return [
@@ -155,7 +156,11 @@ class UserController
     public function edit($id)
     {
         $user = $this->userRepository->findById($id);
-
+        
+        // TODO update if LetterAvatar has new release
+        $user->profile_pic = $user->profile_pic ? 
+            Asset::resolvePath('img/profile/' . $user->profile_pic) : (new LetterAvatar("$user->first_name $user->last_name", 'circle', 128))->__toString();
+        
         if (Request::ajax()) {
             $userArray      = $user->toArray();
             $user['groups'] = $user->getGroups();

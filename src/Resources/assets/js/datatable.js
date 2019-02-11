@@ -78,7 +78,11 @@ $(document).ready(function(){
                         }
 
                     } else if('profile_pic' == a){
-                        $('#profile-pic-preview').attr('src', fields[a] ? global.base_url+ 'assets/img/profile/' + fields[a] : '');
+                        if (fields[a] && (fields[a].startsWith('http://') || fields[a].startsWith('https://') || fields[a].startsWith('data:image'))) {
+                            $('#profile-pic-preview').attr('src', fields[a]);
+                        } else {
+                            $('#profile-pic-preview').attr('src', fields[a] ? global.base_url+ 'assets/img/profile/' + fields[a] : '');
+                        }
                     } else {
                         elem.val(fields[a]);
                     }

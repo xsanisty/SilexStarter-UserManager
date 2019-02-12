@@ -14,14 +14,8 @@
     ],
     "require" : {
         "intervention/image" : "^2.3",
-        "yohang88/letter-avatar": "dev-develop"
+        "yohang88/letter-avatar": "^2.1"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url":  "https://github.com/habibillah/letter-avatar.git"
-        }
-    ],
     "autoload" : {
         "psr-4": {
             "Xsanisty\\UserManager\\" : [ "src/", "tests/"]

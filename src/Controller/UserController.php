@@ -74,8 +74,9 @@ class UserController
                                                 ? sprintf($deleteTemplate, Url::to('usermanager.user.delete', ['id' => $row->id]))
                                                 : '';
 
-                                $profilePic     = !$row->profile_pic // TODO update if LetterAvatar has new release
-                                                ? '<img src="'. (new LetterAvatar("$row->first_name $row->last_name")) .'" class="img-circle img-sm" style="margin:0 10px" />'
+                                $letterAvatar = (new LetterAvatar("$row->first_name $row->last_name"))->setColor('#e8f0fe', '#444444');
+                                $profilePic     = !$row->profile_pic
+                                                ? '<img src="'. $letterAvatar .'" class="img-circle img-sm" style="margin:0 10px" />'
                                                 : '<img src="'. Asset::resolvePath('img/profile/' . $row->profile_pic) .'" class="img-circle img-sm" />';
 
                                 return [
@@ -156,10 +157,12 @@ class UserController
     public function edit($id)
     {
         $user = $this->userRepository->findById($id);
-        
-        // TODO update if LetterAvatar has new release
-        $user->profile_pic = $user->profile_pic ? 
-            Asset::resolvePath('img/profile/' . $user->profile_pic) : (new LetterAvatar("$user->first_name $user->last_name", 'circle', 128))->__toString();
+
+        $letterAvatar = new LetterAvatar("$user->first_name $user->last_name", 'circle', 128);
+        $letterAvatar->setColor('#e8f0fe', '#444444');
+
+        $user->profile_pic = $user->profile_pic ?
+            Asset::resolvePath('img/profile/' . $user->profile_pic) : $letterAvatar->__toString();
         
         if (Request::ajax()) {
             $userArray      = $user->toArray();

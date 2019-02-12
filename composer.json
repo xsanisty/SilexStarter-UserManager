@@ -26,6 +26,5 @@
         "psr-4": {
             "Xsanisty\\UserManager\\" : [ "src/", "tests/"]
         }
-    },
-    "minimum-stability": "stable"
+    }
 }

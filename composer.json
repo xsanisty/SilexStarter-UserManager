@@ -14,7 +14,7 @@
     ],
     "require" : {
         "intervention/image" : "^2.3",
-        "yohang88/letter-avatar": "dev-master"
+        "yohang88/letter-avatar": "dev-develop"
     },
     "repositories": [
         {

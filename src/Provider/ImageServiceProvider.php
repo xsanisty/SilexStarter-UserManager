@@ -2,16 +2,16 @@
 
 namespace Xsanisty\UserManager\Provider;
 
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use Intervention\Image\ImageManager;
 
 class ImageServiceProvider implements ServiceProviderInterface
 {
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $app['image'] = $app->share(
-            function (Application $app) {
+            function (Container $app) {
                 return new ImageManager;
             }
         );
@@ -19,7 +19,7 @@ class ImageServiceProvider implements ServiceProviderInterface
         $app->bind('Intervention\Image\ImageManager', 'image');
     }
 
-    public function boot(Application $app)
+    public function boot(Container $app)
     {
 
     }

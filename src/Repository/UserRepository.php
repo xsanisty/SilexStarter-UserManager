@@ -184,16 +184,16 @@ class UserRepository implements UserRepositoryInterface
             foreach ($userPermissions as $permission) {
                 $userData['permissions'][$permission] = 1;
             }
+
+            $permissions = $this->permissionRepo->findAll();
+            $defaultPermissions = [];
+
+            foreach ($permissions as $permission) {
+                $defaultPermissions[$permission->name] = 0;
+            }
+
+            $userData['permissions'] = array_merge($defaultPermissions, $userData['permissions']);
         }
-
-        $permissions = $this->permissionRepo->findAll();
-        $defaultPermissions = [];
-
-        foreach ($permissions as $permission) {
-            $defaultPermissions[$permission->name] = 0;
-        }
-
-        $userData['permissions'] = array_merge($defaultPermissions, $userData['permissions']);
 
         $user->update($userData);
 

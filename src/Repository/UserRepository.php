@@ -157,7 +157,7 @@ class UserRepository implements UserRepositoryInterface
         $user   = $this->sentry->findUserById($userId);
         $groups = isset($userData['groups']) ? $userData['groups'] : [];
 
-        if ($userData['password'] !== $userData['confirm_password']) {
+        if (isset($userData['password']) && $userData['password'] !== $userData['confirm_password']) {
             throw new Exception("Password and confirmation password mismatch", 1);
         }
 

@@ -161,7 +161,7 @@ class UserRepository implements UserRepositoryInterface
             throw new Exception("Password and confirmation password mismatch", 1);
         }
 
-        if (!$userData['password']) {
+        if (isset($userData['password']) && !$userData['password']) {
             unset($userData['password']);
         }
 

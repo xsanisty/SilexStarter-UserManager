@@ -30,7 +30,7 @@ class User extends SentryUser
         return $this->companies()->where('active', '=', 1)->first();
     }
 
-    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    public function newPivot(Model $parent, array $attributes, $table, $exists, $using = nul)
     {
         if ($parent instanceof \Xsanisty\UserManager\Model\Company) {
             return new CompanyUserPivot($parent, $attributes, $table, $exists);

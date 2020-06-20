@@ -9,8 +9,8 @@ class Company extends Model
 {
     protected $guarded = ['id'];
 
-    public function newPivot(Model $parent, array $attributes, $table, $exists)
+    public function newPivot(Model $parent, array $attributes, $table, $exists, $using = null)
     {
-        return new CompanyUserPivot($parent, $attributes, $table, $exists);
+        return new CompanyUserPivot($parent, $attributes, $table, $exists, $using);
     }
 }
